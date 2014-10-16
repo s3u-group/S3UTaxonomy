@@ -1,7 +1,7 @@
 <SCRIPT LANGUAGE="JavaScript">
     function confirmAction() {
-      var xacnhan=confirm("Bạn thật sự muốn xóa nó?");
-      if(xacnhan==true)
+      var xacNhan=confirm("Bạn thật sự muốn xóa Taxonomy này?");
+      if(xacNhan==true)
       {
         return true;
       }
@@ -36,7 +36,7 @@
      <td>
          
          <a href="<?php echo $this->url('s3u_taxonomy/crud',
-             array('action'=>'delete', 'id' => $termTaxonomy->getTaxonomy()));?>" onclick="return confirmAction()">Xóa</a>
+             array('action'=>'delete','id'=>$termTaxonomy->getTermTaxonomyId()));?>" onclick="return confirmAction()">Xóa</a>
      </td>    
  </tr>
  <?php endforeach; ?> 

@@ -99,28 +99,48 @@
 
  	public function deleteAction()
  	{
-        $id = (int) $this->params()->fromRoute('id', 0);
-        if (!$id) {
+        
+        $taxonomy = $this->params()->fromRoute('id', 0);
+        if (!$taxonomy) {
             return $this->redirect()->toRoute('s3u_taxonomy');
         }
         $objectManager= $this->getEntityManager();
-        $form = new ZfTermTaxonomyForm($objectManager); 
-        die(var_dump($id));
+        $form = new ZfTermTaxonomyForm($objectManager);
+        $termTaxonomys = $objectManager->getRepository('S3UTaxonomy\Entity\ZfTermTaxonomy')->find($taxonomy);
+        
+        $taxonomy=$termTaxonomys->getTaxonomy();
+        //die(var_dump($taxonomy));
         $repository = $objectManager->getRepository('S3UTaxonomy\Entity\ZfTermTaxonomy');
         $queryBuilder = $repository->createQueryBuilder('tt');
-        $queryBuilder->add('where','tt.taxonomy =\''.$id.'\'');
+        $queryBuilder->add('where','tt.taxonomy =\''.$taxonomy.'\'');
         $query = $queryBuilder->getQuery(); 
-        $termTaxonomy = $query->execute();
-        //die(var_dump($termTaxonomy));
-        //$termTaxonomy = $objectManager->getRepository('S3UTaxonomy\Entity\ZfTermTaxonomy')->find($id);
-        if($termTaxonomy)
+        $termTaxonomys = $query->execute();
+        //die(var_dump($termTaxonomys));
+        if($termTaxonomys)
         {
-            $objectManager->remove($termTaxonomy);
-            $objectManager->flush();
-            
+            foreach ($termTaxonomys as $termTaxonomy) {
+                //$termTaxonomy = new ZfTermTaxonomyForm();
+                $entityManager=$this->getEntityManager();
+                $termTaxonomy->setParent(NULL);
+                $entityManager->merge($termTaxonomy);
+                $entityManager->flush();
+                /*
+                $objectManager->remove($termTaxonomy);
+                $objectManager->flush();
+                */
+               
+            }
+            foreach ($termTaxonomys as $termTaxonomy) {
+                
+                $objectManager->remove($termTaxonomy);
+                $objectManager->flush();
+               
+            }
+                
         }
-        
+    
         return $this->redirect()->toRoute('s3u_taxonomy');
+        
 
  	}
  }
