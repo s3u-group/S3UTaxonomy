@@ -6,6 +6,7 @@
  use S3UTaxonomy\Entity\ZfTermTaxonomy;
  use Zend\ServiceManager\ServiceManager;
  use S3UTaxonomy\Form\ZfTermTaxonomyForm;
+ 
 
  class IndexController extends AbstractActionController
  {
@@ -47,11 +48,18 @@
  	public function addAction()
  	{
  		 $objectManager= $this->getEntityManager();
+
+         
+ 		 $objectManager=$this->getEntityManager();
+
+
+
          $zfTermTaxonomy=new ZfTermTaxonomy();
          $form= new ZfTermTaxonomyForm($objectManager);
          $form->bind($zfTermTaxonomy);
 
          $request = $this->getRequest();
+
          if ($request->isPost()) 
          {                        
              $rq=$request->getPost()->taxonomy;
@@ -68,6 +76,19 @@
                  $form->setData($request->getPost());                                        
                  if ($form->isValid()) 
                  {
+
+         if ($request->isPost()) {     
+             
+             $taxonomy=$request->getPost()->taxonomy;            
+             $repository = $objectManager->getRepository('S3UTaxonomy\Entity\ZfTermTaxonomy');
+             $queryBuilder = $repository->createQueryBuilder('tt');
+             $queryBuilder->add('where','tt.taxonomy =\''.$taxonomy.'\'');
+             $query = $queryBuilder->getQuery(); 
+             $checkTermTaxonomy = $query->execute();
+             if(!$checkTermTaxonomy)
+             {
+                $form->setData($request->getPost()); 
+                if ($form->isValid()) {
                    $objectManager->persist($zfTermTaxonomy);
                    $objectManager->flush();
 
@@ -77,10 +98,25 @@
             else
             {
             }
+                }
+
+             } 
+             else
+             {
+                return array(
+                    'form' => $form,
+                    'checkTermTaxonomy'=>0,
+
+                );
+             }            
+
          }         
+       
          return array(
-            'form' => $form,
-         );     
+            'form' => $form, 
+            'checkTermTaxonomy'=>1,           
+         );
+           
  	}
 
  	public function editAction()

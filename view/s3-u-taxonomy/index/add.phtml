@@ -1,5 +1,5 @@
 <?php
-
+ 
  $title = 'Thêm taxonomy';
  $this->headTitle($title);
  ?>
@@ -18,7 +18,12 @@
  <?php $tenTaxonomy=$form->get('taxonomy');?>
  <?php $tenTaxonomy->setAttribute('class','form-control'); ?>
  <label><?php echo $tenTaxonomy->getLabel(); ?></label>
- <?php echo $this->formElement($tenTaxonomy); ?>
+ <?php echo $this->formElement($tenTaxonomy); 
+if($checkTermTaxonomy==0)
+ {
+	echo 'Taxonomy bạn vừa thêm đã tồn tại';
+ }
+ ?>
 </div>
  
  <?php 
