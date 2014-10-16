@@ -99,6 +99,29 @@
 
  	public function deleteAction()
  	{
+        $id = (int) $this->params()->fromRoute('id', 0);
+        if (!$id) {
+            return $this->redirect()->toRoute('s3u_taxonomy');
+        }
+        $objectManager= $this->getEntityManager();
+        $form = new ZfTermTaxonomyForm($objectManager); 
+        die(var_dump($id));
+        $repository = $objectManager->getRepository('S3UTaxonomy\Entity\ZfTermTaxonomy');
+        $queryBuilder = $repository->createQueryBuilder('tt');
+        $queryBuilder->add('where','tt.taxonomy =\''.$id.'\'');
+        $query = $queryBuilder->getQuery(); 
+        $termTaxonomy = $query->execute();
+        //die(var_dump($termTaxonomy));
+        //$termTaxonomy = $objectManager->getRepository('S3UTaxonomy\Entity\ZfTermTaxonomy')->find($id);
+        if($termTaxonomy)
+        {
+            $objectManager->remove($termTaxonomy);
+            $objectManager->flush();
+            
+        }
+        
+        return $this->redirect()->toRoute('s3u_taxonomy');
+
  	}
  }
 ?>

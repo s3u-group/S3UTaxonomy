@@ -2,6 +2,9 @@
 namespace S3UTaxonomy\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use ZfcUser\Entity\UserInterface;
+use BjyAuthorize\Provider\Role\ProviderInterface;
+use Doctrine\Common\Collections\ArrayCollection;
 /**
 * @ORM\Entity
 * @ORM\Table(name="zf_term_taxonomy")
@@ -31,6 +34,8 @@ class ZfTermTaxonomy
 	 * @ORM\Column(type="text")
 	 */
 	private $description;
+
+	
 
 	/**
 	* @ORM\Column(type="bigint",length=20)
