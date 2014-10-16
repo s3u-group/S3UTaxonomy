@@ -15,6 +15,23 @@
      <th>Sửa</th>
      <th>Xóa</th>
  </tr> 
+
+<?php foreach ($termTaxonomys as $termTaxonomy):?>
+ <tr>     
+     <td><?php echo $this->escapeHtml($termTaxonomy->getTaxonomy());?></td>
+     <td>
+         <a href="<?php echo $this->url('s3u_taxonomy/crud',
+             array('action'=>'edit', 'id' => $termTaxonomy->getTermTaxonomyId()));?>">Sửa</a>         
+     </td>   
+     <td>
+         
+         <a href="<?php echo $this->url('s3u_taxonomy/crud',
+             array('action'=>'delete', 'id' => $termTaxonomy->getTermTaxonomyId()));?>">Xóa</a>
+     </td>    
+ </tr>
+ <?php endforeach; ?> 
+
+ <!-- Làm theo kiểu bình thường hiển thị lên hết luôn, lúc này cái này không đúng với yêu cầu
  <?php foreach ($zfTermTaxonomys as $zfTermTaxonomy):?>
  <tr>     
      <td><?php echo $this->escapeHtml($zfTermTaxonomy->getTaxonomy());?></td>
@@ -29,5 +46,32 @@
      </td>    
  </tr>
  <?php endforeach; ?> 
+
+-->
+<!-- sử dụng Distinct -->
+
+<!--
+  <?php foreach ($distincTermTaxonomys as $distincTermTaxonomy):?>
+ <tr>  
+    <?php var_dump($distincTermTaxonomy); ?>
+     <td><?php echo $distincTermTaxonomy['taxonomy']; ?></td>
+    
+     <td>
+         <a href="<?php echo $this->url('s3u_taxonomy/crud',
+             array('action'=>'edit', 'id' => $distincTermTaxonomy["taxonomy"]));?>">Sửa</a>         
+     </td>   
+     <td>
+         
+         <a href="<?php echo $this->url('s3u_taxonomy/crud',
+             array('action'=>'delete', 'id' => $distincTermTaxonomy["taxonomy"]));?>">Xóa</a>
+     </td>    
+
+ </tr>
+ <?php endforeach; ?> 
+ -->
+
+
  </table>
+
+
 </form>

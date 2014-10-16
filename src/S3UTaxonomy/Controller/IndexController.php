@@ -21,14 +21,33 @@
     }
  	public function indexAction()
  	{
+
+        $entityManager=$this->getEntityManager();
+        $query = $entityManager->createQuery("SELECT distinct tt.taxonomy FROM S3UTaxonomy\Entity\ZfTermTaxonomy tt");
+        $distincTermTaxonomys = $query->getResult();
+    
+
+
+        $objectManager= $this->getEntityManager();
+        $repository = $objectManager->getRepository('S3UTaxonomy\Entity\ZfTermTaxonomy');
+        $queryBuilder = $repository->createQueryBuilder('tt');
+        $queryBuilder->add('where','tt.term_id =0');
+        $query = $queryBuilder->getQuery();
+        $termTaxonomys = $query->execute();
+
  		$objectManager=$this->getEntityManager();
  		$zfTermTaxonomys=$objectManager->getRepository('S3UTaxonomy\Entity\ZfTermTaxonomy')->findAll();
 
- 		return array('zfTermTaxonomys'=>$zfTermTaxonomys);
+ 		return array(
+            'zfTermTaxonomys'=>$zfTermTaxonomys,
+            'distincTermTaxonomys'=>$distincTermTaxonomys,
+            'termTaxonomys'=>$termTaxonomys,
+        );
  	}
 
  	public function addAction()
  	{
+         
  		 $objectManager=$this->getEntityManager();
          $zfTermTaxonomy=new ZfTermTaxonomy();
          $form= new ZfTermTaxonomyForm($objectManager);
@@ -46,7 +65,9 @@
                return $this->redirect()->toRoute('s3u_taxonomy');
              }
          }         
-         return array('form' => $form);     
+         return array(
+            'form' => $form,
+         );     
  	}
 
  	public function editAction()
