@@ -20,7 +20,7 @@ class ZfTermTaxonomy
 	* @ORM\ManyToOne(targetEntity="S3UTaxonomy\Entity\ZfTerm")
 	* @ORM\JoinColumn(name="term_id", referencedColumnName="term_id")
 	*/
-	private $term_id;
+	private $term_id=0;
 
 	/**
 	 * @ORM\Column(length=200)
@@ -28,7 +28,7 @@ class ZfTermTaxonomy
 	private $taxonomy;
 
 	/**
-	 * @ORM\Column(type="longtext")
+	 * @ORM\Column(type="text")
 	 */
 	private $description;
 
