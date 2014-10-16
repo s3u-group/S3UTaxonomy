@@ -6,6 +6,7 @@
  use S3UTaxonomy\Entity\ZfTermTaxonomy;
  use Zend\ServiceManager\ServiceManager;
  use S3UTaxonomy\Form\ZfTermTaxonomyForm;
+ 
 
  class IndexController extends AbstractActionController
  {
@@ -49,25 +50,47 @@
  	{
          
  		 $objectManager=$this->getEntityManager();
+
+
          $zfTermTaxonomy=new ZfTermTaxonomy();
          $form= new ZfTermTaxonomyForm($objectManager);
          $form->bind($zfTermTaxonomy);
 
          $request = $this->getRequest();
          if ($request->isPost()) {     
-             //$form->setInputFilter($album->getInputFilter());
-             $form->setData($request->getPost());
-            
-             if ($form->isValid()) {
-               $objectManager->persist($zfTermTaxonomy);
-               $objectManager->flush();
+             
+             $taxonomy=$request->getPost()->taxonomy;            
+             $repository = $objectManager->getRepository('S3UTaxonomy\Entity\ZfTermTaxonomy');
+             $queryBuilder = $repository->createQueryBuilder('tt');
+             $queryBuilder->add('where','tt.taxonomy =\''.$taxonomy.'\'');
+             $query = $queryBuilder->getQuery(); 
+             $checkTermTaxonomy = $query->execute();
+             if(!$checkTermTaxonomy)
+             {
+                $form->setData($request->getPost()); 
+                if ($form->isValid()) {
+                   $objectManager->persist($zfTermTaxonomy);
+                   $objectManager->flush();
 
-               return $this->redirect()->toRoute('s3u_taxonomy');
-             }
+                   return $this->redirect()->toRoute('s3u_taxonomy');
+                }
+
+             } 
+             else
+             {
+                return array(
+                    'form' => $form,
+                    'checkTermTaxonomy'=>0,
+
+                );
+             }            
          }         
+       
          return array(
-            'form' => $form,
-         );     
+            'form' => $form, 
+            'checkTermTaxonomy'=>1,           
+         );
+           
  	}
 
  	public function editAction()
