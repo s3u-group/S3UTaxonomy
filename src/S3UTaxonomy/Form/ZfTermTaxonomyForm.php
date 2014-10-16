@@ -1,4 +1,4 @@
-<?php
+<?php 
 namespace S3UTaxonomy\Form;
 
 use Zend\Form\Form;
@@ -14,7 +14,7 @@ use S3UTaxonomy\Entity\ZfTermTaxonomy;
      public function __construct(ObjectManager $objectManager)
      {        
          // we want to ignore the name passed
-         parent::__construct('taxonomy');
+         parent::__construct('s3u_taxonomy');
 
          $this->om=$objectManager;
 
@@ -25,20 +25,16 @@ use S3UTaxonomy\Entity\ZfTermTaxonomy;
              'name' => 'term_taxonomy_id',
              'type' => 'Hidden',
          ));
-
-         
-        
+                
          $this->add(array(
              'name' => 'taxonomy',
              'type' => 'Text',
              'options' => array(
                  'label' => 'Tên taxonomy',
              ),
-
              'attributes'=>array('required'=>'required'),
          ));
-                
-
+            
          $this->add(array(
              'name' => 'submit',
              'type' => 'Submit',
