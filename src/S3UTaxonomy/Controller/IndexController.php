@@ -94,7 +94,6 @@
 
  	public function editAction()
  	{
-<<<<<<< HEAD
         $id = (int) $this->params()->fromRoute('id', 0);
          if (!$id) {
              return $this->redirect()->toRoute('s3u_taxonomy', array(
@@ -157,9 +156,6 @@
              'form' => $form,
              'coKiemTraTonTai' => 0,
          );
-=======
-        
->>>>>>> origin
  	}
 
  	public function deleteAction()
