@@ -36,22 +36,23 @@ use BaconStringUtils\UniDecoder;
         <?php 
             $slugifier=new Slugifier;
             $decoder=new UniDecoder; 
-            $term=$termTaxonomy->getTermId();       
+            $term=$termTaxonomy->getTermId();  
+            var_dump($term->getTermId());     
         ?>
         <a href="<?php echo $this->url('taxonomy/childTaxonomy',
-             array('tax'=>$term->getSlug(), 'id' => $termTaxonomy->getTermTaxonomyId()));?>">
+             array('tax'=>$term->getSlug(), 'id' => $term->getTermId()));?>">
             <?php echo $this->escapeHtml($term->getName());?>
         </a>
 
      </td>
      <td>
          <a href="<?php echo $this->url('s3u_taxonomy/taxonomys',
-             array('action'=>'edit', 'id' => $termTaxonomy->getTermTaxonomyId()));?>">Sửa</a>         
+             array('action'=>'edit', 'id' => $term->getTermId()));?>">Sửa</a>         
      </td>   
      <td>
          
          <a href="<?php echo $this->url('s3u_taxonomy/taxonomys',
-             array('action'=>'delete','id'=>$termTaxonomy->getTermTaxonomyId()));?>" onclick="return confirmAction()">Xóa</a>
+             array('action'=>'delete','id'=>$term->getTermId()));?>" onclick="return confirmAction()">Xóa</a>
      </td>    
  </tr>
  <?php endforeach; ?> 

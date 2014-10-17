@@ -111,30 +111,40 @@
 
  	public function editAction()
  	{
+        
+        $entityManager=$this->getEntityManager();
+        $objectManager=$this->getEntityManager();
         $id = (int) $this->params()->fromRoute('id', 0);
          if (!$id) {
              return $this->redirect()->toRoute('s3u_taxonomy', array(
                  'action' => 'add'
              ));
          }
-
-         $objectManager=$this->getEntityManager();
-         $repository = $objectManager->getRepository('S3UTaxonomy\Entity\ZfTerm')->find($id);         
-         $form= new ZfTermForm($objectManager,$id);                               
-         $form->bind($repository);
-         $form->get('submit')->setAttribute('value', 'Sửa');
+         
+         $form= new ZfTermForm($objectManager);         
+         $repository = $objectManager->getRepository('S3UTaxonomy\Entity\ZfTerm')->find($id);           
          //die(var_dump($repository));
-         $request = $this->getRequest();
-        
+         
+         $form->bind($repository);  
+
+         
+         $request = $this->getRequest();         
          if ($request->isPost()) {
              
              // lấy taxonomy theo id ra;
+             
              $suaTaxonomy=$repository->getName();
+             //die(var_dump($suaTaxonomy));
              $rq=$request->getPost()->name;
+             $slugifier=new Slugifier;
+             $decoder=new UniDecoder;   
+             $slug=$slugifier->slugify($decoder->decode($rq)); 
+             //die(var_dump($rq));
+
              // kiểm tra trong csdl có rq chưa
              $kiemTraTonTai = $objectManager->getRepository('S3UTaxonomy\Entity\ZfTerm');
-             $queryBuilder = $kiemTraTonTai->createQueryBuilder('tt');             
-             $queryBuilder->add('where','tt.taxonomy=\''.$rq.'\'');       
+             $queryBuilder = $kiemTraTonTai->createQueryBuilder('t');             
+             $queryBuilder->add('where','t.name=\''.$rq.'\'');       
              $query = $queryBuilder->getQuery();        
              $kqKiemTraTonTai = $query->execute();
              if($suaTaxonomy==$rq)
@@ -151,31 +161,35 @@
              }
              else
              {
-                 //die(var_dump($suaTaxonomy));
-                 $form->setData($request->getPost());
+                 
+                 $repository->setName($rq);
+                 $repository->setSlug($slug);
+                 $entityManager->merge($repository);
                  $objectManager->flush();// flush
-                 /*
+              
                  $repository = $objectManager->getRepository('S3UTaxonomy\Entity\ZfTermTaxonomy');
                  $queryBuilder = $repository->createQueryBuilder('tt');             
-                 $queryBuilder->add('where','tt.taxonomy=\''.$suaTaxonomy.'\'');       
+                 $queryBuilder->add('where','tt.term_id=\''.$id.'\'');       
                  $query = $queryBuilder->getQuery();        
                  $termTaxonomys = $query->execute();
-                 
+                 //die(var_dump($slug));
                  foreach ($termTaxonomys as $termTaxonomy) {
                     $entityManager=$this->getEntityManager();
-                    $termTaxonomy->setTaxonomy($rq);
+                    $termTaxonomy->setTaxonomy($slug);
                     $entityManager->merge($termTaxonomy);
                     $entityManager->flush();                 
                  }
-                 */
+                 
                  return $this->redirect()->toRoute('s3u_taxonomy');
              }
          }
+         //die(var_dump($form));
          return array(
              'id' => $id,
              'form' => $form,
              'coKiemTraTonTai' => 0,
          );
+
  	}
 
  	public function deleteAction()
@@ -188,7 +202,7 @@
         $objectManager= $this->getEntityManager();
         $form = new ZfTermTaxonomyForm($objectManager);
         $termTaxonomys = $objectManager->getRepository('S3UTaxonomy\Entity\ZfTermTaxonomy')->find($taxonomy);
-        
+        die(var_dump($termTaxonomys));
         $taxonomy=$termTaxonomys->getTaxonomy();
         //die(var_dump($taxonomy));
         $repository = $objectManager->getRepository('S3UTaxonomy\Entity\ZfTermTaxonomy');

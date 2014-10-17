@@ -1,5 +1,6 @@
 <?php 
 
+
  $title = 'Sửa';
  $this->headTitle($title);
  ?>
@@ -17,8 +18,9 @@
  $form->prepare();
 
  echo $this->form()->openTag($form);
- echo $this->formHidden($form->get('term_taxonomy_id')); 
- echo $this->formRow($form->get('taxonomy')); 
+ echo $this->formHidden($form->get('term_id')); 
+ //var_dump($form);
+ echo $this->formRow($form->get('name')); 
 
  echo $this->formSubmit($form->get('submit'));
  if($this->coKiemTraTonTai==1)
@@ -26,3 +28,5 @@
  	echo '<br>Đã tồn tại';
  }
  echo $this->form()->closeTag();
+ 
+ ?>
