@@ -106,44 +106,55 @@
          $form= new ZfTermTaxonomyForm($objectManager,$id);                               
          $form->bind($repository);
          $form->get('submit')->setAttribute('value', 'Edit');
-
+         //die(var_dump($repository));
          $request = $this->getRequest();
         
          if ($request->isPost()) {
-             //$form->setInputFilter($album->getInputFilter());
-
+             
+             // lấy taxonomy theo id ra;
+             $suaTaxonomy=$repository->getTaxonomy();
              $rq=$request->getPost()->taxonomy;
-
-             $repository = $objectManager->getRepository('S3UTaxonomy\Entity\ZfTermTaxonomy');
-             $queryBuilder = $repository->createQueryBuilder('tt');             
-             $queryBuilder->add('where','tt.taxonomy=\''.$rq.'\'');             
-
+             // kiểm tra trong csdl có rq chưa
+             $kiemTraTonTai = $objectManager->getRepository('S3UTaxonomy\Entity\ZfTermTaxonomy');
+             $queryBuilder = $kiemTraTonTai->createQueryBuilder('tt');             
+             $queryBuilder->add('where','tt.taxonomy=\''.$rq.'\'');       
              $query = $queryBuilder->getQuery();        
-             $tam = $query->execute();
-             //die(var_dump($tam));
-             if(!$tam||($tam&&$tam[0]->getTaxonomy()==$rq))
+             $kqKiemTraTonTai = $query->execute();
+             if($suaTaxonomy==$rq)
              {
-                 $form->setData($request->getPost());
-                 if ($form->isValid()) {                
-                      $objectManager->flush();
-
-                     // Redirect to list of albums
-                     return $this->redirect()->toRoute('s3u_taxonomy');
-                 }
+                return $this->redirect()->toRoute('s3u_taxonomy');
+             }
+             if($kqKiemTraTonTai)
+             {
+                 return array(
+                     'id' => $id,
+                     'form' => $form,
+                     'coKiemTraTonTai' => 1,
+                 );
              }
              else
              {
-                return array(
-                 'id' => $id,
-                 'form' => $form,
-                 'co'   =>0,
-                );
+                
+                 //die(var_dump($suaTaxonomy));
+                 $repository = $objectManager->getRepository('S3UTaxonomy\Entity\ZfTermTaxonomy');
+                 $queryBuilder = $repository->createQueryBuilder('tt');             
+                 $queryBuilder->add('where','tt.taxonomy=\''.$suaTaxonomy.'\'');       
+                 $query = $queryBuilder->getQuery();        
+                 $termTaxonomys = $query->execute();
+                 
+                 foreach ($termTaxonomys as $termTaxonomy) {
+                    $entityManager=$this->getEntityManager();
+                    $termTaxonomy->setTaxonomy($rq);
+                    $entityManager->merge($termTaxonomy);
+                    $entityManager->flush();                 
+                 }
+                 return $this->redirect()->toRoute('s3u_taxonomy');
              }
          }
          return array(
              'id' => $id,
              'form' => $form,
-             'co'   =>1,
+             'coKiemTraTonTai' => 0,
          );
  	}
 
