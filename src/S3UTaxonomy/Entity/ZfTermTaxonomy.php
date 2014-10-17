@@ -17,11 +17,10 @@ class ZfTermTaxonomy
 	private $term_taxonomy_id;
 
 	/**
-	* @ORM\Column(type="bigint",length=20)
 	* @ORM\ManyToOne(targetEntity="S3UTaxonomy\Entity\ZfTerm")
 	* @ORM\JoinColumn(name="term_id", referencedColumnName="term_id")
 	*/
-	private $term_id=0;
+	private $term_id;
 
 	/**
 	 * @ORM\Column(length=200)

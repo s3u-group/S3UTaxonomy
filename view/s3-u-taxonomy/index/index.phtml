@@ -1,3 +1,7 @@
+<?php 
+use BaconStringUtils\Slugifier;
+use BaconStringUtils\UniDecoder;
+?>
 <SCRIPT LANGUAGE="JavaScript">
     function confirmAction() {
       var xacNhan=confirm("Bạn thật sự muốn xóa Taxonomy này?");
@@ -15,7 +19,7 @@
  ?>
  <h1><?php echo $this->escapeHtml($title); ?></h1>
  <p>
-     <a href="<?php echo $this->url('s3u_taxonomy/crud', array('action'=>'add'));?>">Thêm Taxonomy</a>
+     <a href="<?php echo $this->url('s3u_taxonomy/taxonomys', array('action'=>'add'));?>">Thêm Taxonomy</a>
  </p>
 <form method="post">
  <table class="table">
@@ -28,60 +32,28 @@
 
 <?php foreach ($termTaxonomys as $termTaxonomy):?>
  <tr>     
-     <td><?php echo $this->escapeHtml($termTaxonomy->getTaxonomy());?></td>
      <td>
-         <a href="<?php echo $this->url('s3u_taxonomy/crud',
+        <?php 
+            $slugifier=new Slugifier;
+            $decoder=new UniDecoder; 
+            $term=$termTaxonomy->getTermId();       
+        ?>
+        <a href="<?php echo $this->url('taxonomy/childTaxonomy',
+             array('tax'=>$term->getSlug(), 'id' => $termTaxonomy->getTermTaxonomyId()));?>">
+            <?php echo $this->escapeHtml($term->getName());?>
+        </a>
+
+     </td>
+     <td>
+         <a href="<?php echo $this->url('s3u_taxonomy/taxonomys',
              array('action'=>'edit', 'id' => $termTaxonomy->getTermTaxonomyId()));?>">Sửa</a>         
      </td>   
      <td>
          
-         <a href="<?php echo $this->url('s3u_taxonomy/crud',
+         <a href="<?php echo $this->url('s3u_taxonomy/taxonomys',
              array('action'=>'delete','id'=>$termTaxonomy->getTermTaxonomyId()));?>" onclick="return confirmAction()">Xóa</a>
      </td>    
  </tr>
  <?php endforeach; ?> 
-
- <!-- Làm theo kiểu bình thường hiển thị lên hết luôn, lúc này cái này không đúng với yêu cầu
- <?php foreach ($zfTermTaxonomys as $zfTermTaxonomy):?>
- <tr>     
-     <td><?php echo $this->escapeHtml($zfTermTaxonomy->getTaxonomy());?></td>
-     <td>
-         <a href="<?php echo $this->url('s3u_taxonomy/crud',
-             array('action'=>'edit', 'id' => $zfTermTaxonomy->getTermTaxonomyId()));?>">Sửa</a>         
-     </td>   
-     <td>
-         
-         <a href="<?php echo $this->url('s3u_taxonomy/crud',
-             array('action'=>'delete', 'id' => $zfTermTaxonomy->getTermTaxonomyId()));?>">Xóa</a>
-     </td>    
- </tr>
- <?php endforeach; ?> 
-
--->
-<!-- sử dụng Distinct -->
-
-<!--
-  <?php foreach ($distincTermTaxonomys as $distincTermTaxonomy):?>
- <tr>  
-    <?php var_dump($distincTermTaxonomy); ?>
-     <td><?php echo $distincTermTaxonomy['taxonomy']; ?></td>
-    
-     <td>
-         <a href="<?php echo $this->url('s3u_taxonomy/crud',
-             array('action'=>'edit', 'id' => $distincTermTaxonomy["taxonomy"]));?>">Sửa</a>         
-     </td>   
-     <td>
-         
-         <a href="<?php echo $this->url('s3u_taxonomy/crud',
-             array('action'=>'delete', 'id' => $distincTermTaxonomy["taxonomy"]));?>">Xóa</a>
-     </td>    
-
- </tr>
- <?php endforeach; ?> 
- -->
-
-
  </table>
-
-
 </form>

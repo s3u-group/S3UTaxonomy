@@ -3,6 +3,7 @@ return array(
 	'controllers' => array(
 		'invokables' => array(
 			'S3UTaxonomy\Controller\Index' => 'S3UTaxonomy\Controller\IndexController',
+            'S3UTaxonomy\Controller\Taxonomy' => 'S3UTaxonomy\Controller\TaxonomyController',
 		),
 	),
     'router' => array(
@@ -16,21 +17,62 @@ return array(
                         'controller' => 'Index',
                         'action'     => 'index',
                     ),
-                ),
+                ),                
                 'may_terminate' => true,
-                'child_routes' => array(                    
-                    'crud' => array(
+                'child_routes' => array(            
+                    'taxonomys' => array(
                         'type'    => 'Segment',
                         'options' => array(
-                            'route'    => '[/][:action][/:id]',
+                            'route'    => '[/:action][/:id]',
                             'constraints' => array(                            
                                 'action'     => '[a-zA-Z][a-zA-Z0-9_-]*',
                                 'id'=>'[0-9]+',
-                            ),                            
-                        ),
-                    ),                    
+                            ),                                                     
+                        ),    
+                    ),                                  
                 ),
-             ),
+
+            ),
+            'taxonomy'=>array(
+                'type'    => 'literal', 
+                'options' => array(
+                    'route'    => '/taxonomy',                     
+                    'defaults' => array(
+                       '__NAMESPACE__'=>'S3UTaxonomy\Controller',
+                        'controller' => 'Taxonomy', 
+                        'action'     => 'taxonomyIndex',
+                    ),
+                ),
+                'may_terminate' => true,
+                'child_routes' => array(            
+                    'childTaxonomy' => array(
+                        'type'    => 'Segment',
+                        'options' => array(
+                            'route'    => '[/:tax]',
+                            'constraints' => array(                            
+                                'tax'     => '[a-zA-Z][a-zA-Z0-9_-]*',
+                            ), 
+                                                      
+                        ),
+                        'may_terminate' => true,
+                        'child_routes' => array( 
+                            'crudhildTaxonomy' => array(
+                            'type'    => 'Segment',
+                            'options' => array(
+                                'route'    => '[/:action][/:id]',
+                                    'constraints' => array(                            
+                                        'action'     => '[a-zA-Z][a-zA-Z0-9_-]*',
+                                        'id'=>'[0-9]+',
+                                    ), 
+                                                              
+                                ),    
+                            ),  
+                        ),  
+                    ),                                  
+                ),   
+
+            ),
+
          ),
      ),
 
