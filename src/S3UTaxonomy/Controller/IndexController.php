@@ -49,7 +49,6 @@
  	{
  		 $objectManager=$this->getEntityManager();
 
-
          $zfTermTaxonomy=new ZfTermTaxonomy();
          $form= new ZfTermTaxonomyForm($objectManager);
          $form->bind($zfTermTaxonomy);
@@ -79,17 +78,14 @@
                 return array(
                     'form' => $form,
                     'checkTermTaxonomy'=>0,
-
                 );
              }            
-         }         
+         }  
        
          return array(
             'form' => $form, 
             'checkTermTaxonomy'=>1,           
          );
-           
-    
  	}
 
  	public function editAction()
@@ -134,7 +130,6 @@
              }
              else
              {
-                
                  //die(var_dump($suaTaxonomy));
                  $repository = $objectManager->getRepository('S3UTaxonomy\Entity\ZfTermTaxonomy');
                  $queryBuilder = $repository->createQueryBuilder('tt');             
@@ -185,11 +180,6 @@
                 $termTaxonomy->setParent(NULL);
                 $entityManager->merge($termTaxonomy);
                 $entityManager->flush();
-                /*
-                $objectManager->remove($termTaxonomy);
-                $objectManager->flush();
-                */
-               
             }
             foreach ($termTaxonomys as $termTaxonomy) {
                 
@@ -200,8 +190,7 @@
                 
         }
     
-        return $this->redirect()->toRoute('s3u_taxonomy');
-        
+        return $this->redirect()->toRoute('s3u_taxonomy');        
 
  	}
  }
