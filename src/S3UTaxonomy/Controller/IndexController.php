@@ -134,6 +134,7 @@
              // lấy taxonomy theo id ra;
              
              $suaTaxonomy=$repository->getName();
+             $suaSlug=$repository->getSlug();
              //die(var_dump($suaTaxonomy));
              $rq=$request->getPost()->name;
              $slugifier=new Slugifier;
@@ -161,7 +162,7 @@
              }
              else
              {
-                 
+                 //die(var_dump($suaSlug));
                  $repository->setName($rq);
                  $repository->setSlug($slug);
                  $entityManager->merge($repository);
@@ -169,7 +170,7 @@
               
                  $repository = $objectManager->getRepository('S3UTaxonomy\Entity\ZfTermTaxonomy');
                  $queryBuilder = $repository->createQueryBuilder('tt');             
-                 $queryBuilder->add('where','tt.term_id=\''.$id.'\'');       
+                 $queryBuilder->add('where','tt.taxonomy=\''.$suaSlug.'\'');       
                  $query = $queryBuilder->getQuery();        
                  $termTaxonomys = $query->execute();
                  //die(var_dump($slug));
