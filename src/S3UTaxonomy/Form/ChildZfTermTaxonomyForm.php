@@ -11,7 +11,7 @@ use S3UTaxonomy\Entity\ZfTermTaxonomy;
  {
      private $om;
 
-     public function __construct(ObjectManager $objectManager,$id)
+     public function __construct(ObjectManager $objectManager, $id)
      {        
          // we want to ignore the name passed
          parent::__construct('s3u_taxonomy');
@@ -66,16 +66,17 @@ use S3UTaxonomy\Entity\ZfTermTaxonomy;
      public function getTaxonomyOption($id)
      {
         $options=array();
+        $taxonomy=$this->om->getRepository('S3UTaxonomy\Entity\ZfTerm')->find($id);
+        $slug=$taxonomy->getSlug();
         $txq=$this->om->getRepository('S3UTaxonomy\Entity\ZfTermTaxonomy');
-        //die(var_dump($id));
         $queryBuilder=$txq->createQueryBuilder('tax');
-        $queryBuilder->add('where', 'tax.term_id ='.$id);
+        $queryBuilder->add('where', 'tax.taxonomy =\''.$slug.'\'');
         $query = $queryBuilder->getQuery();
         $taxs = $query->execute();
-            
+         
         foreach ($taxs as $tax)
         {
-            $options[$tax->getId()]=$tax->getTaxonomy();
+            $options[$tax->getTermTaxonomyId()]=$tax->getTermId()->getName();
         }
         //var_dump($options);
         return $options;

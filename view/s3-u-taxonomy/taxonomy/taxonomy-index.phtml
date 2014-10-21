@@ -13,8 +13,15 @@
     }
 </SCRIPT>
 <?php
+ foreach ($termTaxonomys as $termTaxonomy)
+ {
+    if(!$termTaxonomy->getParent())
+    {
+        $ten=$termTaxonomy->getTermId()->getName();
+    }
+ }
 
- $title = 'Quản lý Term Taxonomy';
+ $title = 'Quản lý Taxonomy '.$ten;
  $this->headTitle($title); 
  ?> 
  <h1><?php echo $this->escapeHtml($title); ?></h1> 
@@ -30,33 +37,25 @@
  <table class="table">
  <tr>
      
-     <th>Taxonomy</th>
+     
      <th>Term</th>
      <th>Description</th>
-     <th>Parent</th>
      <th>Count</th>
      <th>Sửa</th>
      <th>Xóa</th>
  </tr> 
 
-<?php  foreach ($termTaxonomys as $termTaxonomy):?>
+<?php  foreach ($termTaxonomys as $termTaxonomy):
+            if($termTaxonomy->getParent())
+            {
+?>
  <tr>
+     
      <td>
-        <?php 
-            /*$slugifier=new Slugifier;
-            $decoder=new UniDecoder; 
-            $term=$termTaxonomy->getTermId();  */            
-        ?>
-            <?php echo $this->escapeHtml($termTaxonomy->getTaxonomy());?>
-     </td>
-     <td>
-     	<?php echo $this->escapeHtml($termTaxonomy->getTermId()->getName());?>
+     	<?php echo str_repeat("&#8212;&#8212;&#8212;&#8212; ", $termTaxonomy->getCap()).$this->escapeHtml($termTaxonomy->getTermId()->getName());?>
      </td>
      <td>
      	<?php echo $this->escapeHtml($termTaxonomy->getDescription());?>
-     </td>
-     <td>
-     	<?php echo $this->escapeHtml($termTaxonomy->getParent());?>
      </td>
      <td>
      	<?php echo $this->escapeHtml($termTaxonomy->getCount());?>
@@ -71,6 +70,9 @@
              array('tax'=>'taxonomyDelete','id'=>$termTaxonomy->getTermTaxonomyId()));?>" onclick="return confirmAction()">Xóa</a>
      </td>    
  </tr>
- <?php endforeach;?> 
+ <?php 
+        }
+    endforeach;
+ ?> 
  </table>
 </form>

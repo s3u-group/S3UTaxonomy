@@ -6,6 +6,7 @@
  use S3UTaxonomy\Entity\ZfTermTaxonomy;
  use Zend\ServiceManager\ServiceManager;
  use S3UTaxonomy\Form\ZfTermTaxonomyForm;
+ use S3UTaxonomy\Form\ChildZfTermTaxonomyForm;
  
 
  class TaxonomyController extends AbstractActionController
@@ -31,6 +32,13 @@
 
     $entityManager= $this->getEntityManager();
 
+    
+    $repository = $entityManager->getRepository('S3UTaxonomy\Entity\ZfTerm');
+    $queryBuilder = $repository->createQueryBuilder('t');
+    $queryBuilder->add('where','t.slug=\''.$tax.'\'');
+    $query = $queryBuilder->getQuery();
+    $taxonomy = $query->execute();
+    
     $repository = $entityManager->getRepository('S3UTaxonomy\Entity\ZfTermTaxonomy');
     $queryBuilder = $repository->createQueryBuilder('t');
     $queryBuilder->add('where','t.taxonomy=\''.$tax.'\'');
@@ -40,9 +48,13 @@
     if($termTaxonomys==null)
     {
       return $this->redirect()->toRoute('s3u_taxonomy');
-    }     
+    }   
+    $plugin=$this->TreePlugin();
+
+    $termTaxonomys=$plugin->xuatMenu($termTaxonomys, $root = null);  
     return array(
       'termTaxonomys'=>$termTaxonomys,
+      'taxonomy'  => $taxonomy,
     );
  	}
 
@@ -71,7 +83,7 @@
 
  		$objectManager=$this->getEntityManager();
     $zfTermTaxonomy=new ZfTermTaxonomy();
-    $form= new ZfTermTaxonomyForm($objectManager,$id);
+    $form= new ChildZfTermTaxonomyForm($objectManager,$id);
     $form->bind($zfTermTaxonomy);
 
     $request = $this->getRequest();
