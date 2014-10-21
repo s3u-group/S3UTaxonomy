@@ -188,54 +188,33 @@
  	}
 
  	public function deleteAction()
- 	{
-        
+ 	{        
         $id = $this->params()->fromRoute('id', 0);
         if (!$id) {
             return $this->redirect()->toRoute('s3u_taxonomy');
         }
 
-        $objectManager= $this->getEntityManager();
-
-
-        $form = new ZfTermForm($objectManager);
-        $zfTerms = $objectManager->getRepository('S3UTaxonomy\Entity\ZfTerm')->find($id);
-        //die(var_dump($zfTerms));
-        $name=$zfTerms->getName();
-        //die(var_dump($name));
-
-         // xóa term
+        $objectManager= $this->getEntityManager();        
+        
         $term = $objectManager->getRepository('S3UTaxonomy\Entity\ZfTerm')->find($id);
         $taxonomy=$term->getSlug();
-        
-        
         $form = new ZfTermTaxonomyForm($objectManager);
 
         $repository = $objectManager->getRepository('S3UTaxonomy\Entity\ZfTermTaxonomy');
         $queryBuilder = $repository->createQueryBuilder('tt');
-        $queryBuilder->add('where','tt.taxonomy =\''.$name.'\'');
+        $queryBuilder->add('where','tt.taxonomy =\''.$taxonomy.'\'');
         $query = $queryBuilder->getQuery(); 
-        $zfTermTaxonomys = $query->execute();        
-        //die(var_dump($zfTermTaxonomys));
-        if($zfTermTaxonomys)
+        $termTaxonomys = $query->execute();        
+        
+        if($termTaxonomys)
         {
-
-            
-
-            
             foreach ($termTaxonomys as $termTaxonomy) {
                 //$termTaxonomy = new ZfTermTaxonomyForm();
-
                 $entityManager=$this->getEntityManager();
-                $zfTermTaxonomy->setParent(NULL);
-                $entityManager->merge($zfTermTaxonomy);
+                $termTaxonomy->setParent(NULL);
+                $entityManager->merge($termTaxonomy);
                 $entityManager->flush();
-
             }
-
-            
-
-            
             foreach ($termTaxonomys as $termTaxonomy) {
 
                 $termId=$termTaxonomy->getTermId();
@@ -254,22 +233,11 @@
                     //2. lệnh xóa bỏ trong bảng term
                     $deleteTerm = $objectManager->getRepository('S3UTaxonomy\Entity\ZfTerm')->find( $termId);                    
                     $objectManager->remove($deleteTerm);
-                    $objectManager->flush(); 
-                    
-                }
-            }
-
-                
-                $objectManager->remove($zfTermTaxonomy);
-                $objectManager->flush();               
-            }                
-        //Xóa Taxonomy trong ZfTerm        
-        $objectManager->remove($zfTerms);
-        $objectManager->flush();
-    
+                    $objectManager->flush();                     
+                }                
+            } 
+        }                       
         return $this->redirect()->toRoute('s3u_taxonomy');        
-
  	}
-
  }
 ?>
