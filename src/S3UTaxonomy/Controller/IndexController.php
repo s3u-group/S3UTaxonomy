@@ -26,10 +26,8 @@
     }
  	public function indexAction()
  	{
-
         $entityManager=$this->getEntityManager();
     
-
         $objectManager= $this->getEntityManager();
         $repository = $objectManager->getRepository('S3UTaxonomy\Entity\ZfTermTaxonomy');
         $queryBuilder = $repository->createQueryBuilder('tt');
@@ -110,8 +108,7 @@
  	}
 
  	public function editAction()
- 	{
-        
+ 	{        
         $entityManager=$this->getEntityManager();
         $objectManager=$this->getEntityManager();
         $id = (int) $this->params()->fromRoute('id', 0);
@@ -120,14 +117,11 @@
                  'action' => 'add'
              ));
          }
-         
-         $form= new ZfTermForm($objectManager);         
-         $repository = $objectManager->getRepository('S3UTaxonomy\Entity\ZfTerm')->find($id);           
-         //die(var_dump($repository));
-         
-         $form->bind($repository);  
 
+         $form= new ZfTermForm($objectManager);         
+         $repository = $objectManager->getRepository('S3UTaxonomy\Entity\ZfTerm')->find($id);        
          
+         $form->bind($repository);           
          $request = $this->getRequest();         
          if ($request->isPost()) {
              
@@ -166,7 +160,7 @@
                  $repository->setName($rq);
                  $repository->setSlug($slug);
                  $entityManager->merge($repository);
-                 $objectManager->flush();// flush
+                 $objectManager->flush();
               
                  $repository = $objectManager->getRepository('S3UTaxonomy\Entity\ZfTermTaxonomy');
                  $queryBuilder = $repository->createQueryBuilder('tt');             
@@ -194,38 +188,33 @@
  	}
 
  	public function deleteAction()
- 	{
-        
+ 	{        
         $id = $this->params()->fromRoute('id', 0);
         if (!$id) {
             return $this->redirect()->toRoute('s3u_taxonomy');
         }
-        $objectManager= $this->getEntityManager();
 
-         // xóa term
+        $objectManager= $this->getEntityManager();        
+        
         $term = $objectManager->getRepository('S3UTaxonomy\Entity\ZfTerm')->find($id);
         $taxonomy=$term->getSlug();
-        
-        
         $form = new ZfTermTaxonomyForm($objectManager);
+
         $repository = $objectManager->getRepository('S3UTaxonomy\Entity\ZfTermTaxonomy');
         $queryBuilder = $repository->createQueryBuilder('tt');
         $queryBuilder->add('where','tt.taxonomy =\''.$taxonomy.'\'');
         $query = $queryBuilder->getQuery(); 
-        $termTaxonomys = $query->execute();
-        //die(var_dump($termTaxonomys));
+        $termTaxonomys = $query->execute();        
+        
         if($termTaxonomys)
         {
-            
             foreach ($termTaxonomys as $termTaxonomy) {
                 //$termTaxonomy = new ZfTermTaxonomyForm();
                 $entityManager=$this->getEntityManager();
                 $termTaxonomy->setParent(NULL);
                 $entityManager->merge($termTaxonomy);
                 $entityManager->flush();
-
             }
-            
             foreach ($termTaxonomys as $termTaxonomy) {
 
                 $termId=$termTaxonomy->getTermId();
@@ -244,16 +233,11 @@
                     //2. lệnh xóa bỏ trong bảng term
                     $deleteTerm = $objectManager->getRepository('S3UTaxonomy\Entity\ZfTerm')->find( $termId);                    
                     $objectManager->remove($deleteTerm);
-                    $objectManager->flush(); 
-                    
-                }
-            }
-                
-        }
-    
+                    $objectManager->flush();                     
+                }                
+            } 
+        }                       
         return $this->redirect()->toRoute('s3u_taxonomy');        
-
  	}
-
  }
 ?>

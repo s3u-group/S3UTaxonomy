@@ -40,7 +40,7 @@ use BaconStringUtils\UniDecoder;
             //var_dump($term->getTermId());     
         ?>
         <a href="<?php echo $this->url('taxonomy/childTaxonomy',
-             array('tax'=>$term->getSlug(), 'id' => $term->getTermId()));?>">
+             array('tax'=>$term->getSlug(),'id' => $term->getTermId()));?>">
             <?php echo $this->escapeHtml($term->getName());?>
         </a>
 

@@ -7,11 +7,11 @@ use DoctrineModule\Stdlib\Hydrator\DoctrineObject as DoctrineHydrator;
 use S3UTaxonomy\Entity\ZfTerm;
 use S3UTaxonomy\Entity\ZfTermTaxonomy;
 
- class ZfTermTaxonomyForm extends Form
+ class ChildZfTermTaxonomyForm extends Form
  {
      private $om;
 
-     public function __construct(ObjectManager $objectManager)
+     public function __construct(ObjectManager $objectManager,$id)
      {        
          // we want to ignore the name passed
          parent::__construct('s3u_taxonomy');
@@ -33,7 +33,25 @@ use S3UTaxonomy\Entity\ZfTermTaxonomy;
                  'label' => 'Tên taxonomy',
              ),
              'attributes'=>array('required'=>'required'),
-         ));         
+         ));
+
+         $this->add(array(
+             'name' => 'description',
+             'type' => 'Text',
+             'options' => array(
+                 'label' => 'Mô tả',
+             ),             
+         ));
+
+         $this->add(array(
+             'name' => 'taxonomy',
+             'type' => 'Select',
+             'options' => array(
+                 'label' => 'Cha',
+             'empty_option'=>'--Chọn giá trị--',
+             'value_options'=>$this->getTaxonomyOption($id),//Thêm $id
+             ),
+         ));
             
          $this->add(array(
              'name' => 'submit',
@@ -43,6 +61,24 @@ use S3UTaxonomy\Entity\ZfTermTaxonomy;
                  'id' => 'submitbutton',
              ),
          ));         
+     }
+
+     public function getTaxonomyOption($id)
+     {
+        $options=array();
+        $txq=$this->om->getRepository('S3UTaxonomy\Entity\ZfTermTaxonomy');
+        //die(var_dump($id));
+        $queryBuilder=$txq->createQueryBuilder('tax');
+        $queryBuilder->add('where', 'tax.term_id ='.$id);
+        $query = $queryBuilder->getQuery();
+        $taxs = $query->execute();
+            
+        foreach ($taxs as $tax)
+        {
+            $options[$tax->getId()]=$tax->getTaxonomy();
+        }
+        //var_dump($options);
+        return $options;
      }        
  }
  ?>

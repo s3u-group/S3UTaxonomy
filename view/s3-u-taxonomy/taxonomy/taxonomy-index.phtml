@@ -1,3 +1,76 @@
-<?php
-echo 'Child index';
+<?php 
+//use BaconStringUtils\Slugifier;
+//use BaconStringUtils\UniDecoder;
 ?>
+<SCRIPT LANGUAGE="JavaScript">
+    function confirmAction() {
+      var xacNhan=confirm("Bạn thật sự muốn xóa TermTaxonomy này?");
+      if(xacNhan==true)
+      {
+        return true;
+      }
+      return false;
+    }
+</SCRIPT>
+<?php
+
+ $title = 'Quản lý Term Taxonomy';
+ $this->headTitle($title); 
+ ?> 
+ <h1><?php echo $this->escapeHtml($title); ?></h1> 
+ <?php
+ $t=$termTaxonomys[0]->getTaxonomy();
+ //var_dump($t);
+ //die(var_dump($termTaxonomys));
+ ?>
+ <p>        
+     <a href="<?php echo $this->url('taxonomy/childTaxonomy/crudChildTaxonomy', array('tax'=>$t,'action'=>'taxonomyAdd'));?>">Thêm Taxonomy con</a>
+ </p>
+<form method="post">
+ <table class="table">
+ <tr>
+     
+     <th>Taxonomy</th>
+     <th>Term</th>
+     <th>Description</th>
+     <th>Parent</th>
+     <th>Count</th>
+     <th>Sửa</th>
+     <th>Xóa</th>
+ </tr> 
+
+<?php  foreach ($termTaxonomys as $termTaxonomy):?>
+ <tr>
+     <td>
+        <?php 
+            /*$slugifier=new Slugifier;
+            $decoder=new UniDecoder; 
+            $term=$termTaxonomy->getTermId();  */            
+        ?>
+            <?php echo $this->escapeHtml($termTaxonomy->getTaxonomy());?>
+     </td>
+     <td>
+     	<?php echo $this->escapeHtml($termTaxonomy->getTermId()->getName());?>
+     </td>
+     <td>
+     	<?php echo $this->escapeHtml($termTaxonomy->getDescription());?>
+     </td>
+     <td>
+     	<?php echo $this->escapeHtml($termTaxonomy->getParent());?>
+     </td>
+     <td>
+     	<?php echo $this->escapeHtml($termTaxonomy->getCount());?>
+     </td>
+     <td>
+         <a href="<?php echo $this->url('taxonomy/childTaxonomy/crudChildTaxonomy',
+             array('tax'=>'taxonomyEdit', 'id' => $termTaxonomy->getTermTaxonomyId()));?>">Sửa</a>         
+     </td>   
+     <td>
+         
+         <a href="<?php echo $this->url('taxonomy/childTaxonomy/crudChildTaxonomy',
+             array('tax'=>'taxonomyDelete','id'=>$termTaxonomy->getTermTaxonomyId()));?>" onclick="return confirmAction()">Xóa</a>
+     </td>    
+ </tr>
+ <?php endforeach;?> 
+ </table>
+</form>
