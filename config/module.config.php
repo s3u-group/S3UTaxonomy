@@ -31,7 +31,6 @@ return array(
                         ),    
                     ),                                  
                 ),
-
             ),
             'taxonomy'=>array(
                 'type'    => 'literal', 
@@ -50,29 +49,25 @@ return array(
                         'options' => array(
                             'route'    => '[/:tax]',
                             'constraints' => array(                            
-                                'tax'     => '[a-zA-Z][a-zA-Z0-9_-]*',
+                                'tax'     => '[a-zA-Z][a-zA-Z0-9_-]*',                                
                             ), 
-                                                      
                         ),
                         'may_terminate' => true,
                         'child_routes' => array( 
-                            'crudhildTaxonomy' => array(
-                            'type'    => 'Segment',
-                            'options' => array(
-                                'route'    => '[/:action][/:id]',
-                                    'constraints' => array(                            
-                                        'action'     => '[a-zA-Z][a-zA-Z0-9_-]*',
-                                        'id'=>'[0-9]+',
+                            'crudChildTaxonomy' => array(
+                                'type'    => 'Segment',
+                                'options' => array(
+                                    'route'    => '[/:action][/:id]',
+                                    'constraints' => array(
+                                            'action'     => '[a-zA-Z][a-zA-Z0-9_-]*',                                        
+                                            'id'=>'[0-9]+',
                                     ), 
-                                                              
-                                ),    
+                                ),                                   
                             ),  
                         ),  
                     ),                                  
                 ),   
-
             ),
-
          ),
      ),
 

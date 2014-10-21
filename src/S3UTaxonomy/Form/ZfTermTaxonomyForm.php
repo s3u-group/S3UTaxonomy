@@ -33,7 +33,7 @@ use S3UTaxonomy\Entity\ZfTermTaxonomy;
                  'label' => 'Tên taxonomy',
              ),
              'attributes'=>array('required'=>'required'),
-         ));
+         ));         
             
          $this->add(array(
              'name' => 'submit',
