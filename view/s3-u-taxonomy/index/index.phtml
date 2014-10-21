@@ -37,7 +37,7 @@ use BaconStringUtils\UniDecoder;
             $slugifier=new Slugifier;
             $decoder=new UniDecoder; 
             $term=$termTaxonomy->getTermId();  
-            var_dump($term->getTermId());     
+            //var_dump($term->getTermId());     
         ?>
         <a href="<?php echo $this->url('taxonomy/childTaxonomy',
              array('tax'=>$term->getSlug(), 'id' => $term->getTermId()));?>">
