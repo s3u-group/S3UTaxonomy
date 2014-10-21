@@ -128,6 +128,7 @@
              // lấy taxonomy theo id ra;
              
              $suaTaxonomy=$repository->getName();
+             $suaSlug=$repository->getSlug();
              //die(var_dump($suaTaxonomy));
              $rq=$request->getPost()->name;
              $slugifier=new Slugifier;
@@ -155,7 +156,7 @@
              }
              else
              {
-                 
+                 //die(var_dump($suaSlug));
                  $repository->setName($rq);
                  $repository->setSlug($slug);
                  $entityManager->merge($repository);
@@ -163,7 +164,7 @@
               
                  $repository = $objectManager->getRepository('S3UTaxonomy\Entity\ZfTermTaxonomy');
                  $queryBuilder = $repository->createQueryBuilder('tt');             
-                 $queryBuilder->add('where','tt.term_id=\''.$id.'\'');       
+                 $queryBuilder->add('where','tt.taxonomy=\''.$suaSlug.'\'');       
                  $query = $queryBuilder->getQuery();        
                  $termTaxonomys = $query->execute();
                  //die(var_dump($slug));
@@ -196,11 +197,20 @@
 
         $objectManager= $this->getEntityManager();
 
+
         $form = new ZfTermForm($objectManager);
         $zfTerms = $objectManager->getRepository('S3UTaxonomy\Entity\ZfTerm')->find($id);
         //die(var_dump($zfTerms));
         $name=$zfTerms->getName();
         //die(var_dump($name));
+
+         // xóa term
+        $term = $objectManager->getRepository('S3UTaxonomy\Entity\ZfTerm')->find($id);
+        $taxonomy=$term->getSlug();
+        
+        
+        $form = new ZfTermTaxonomyForm($objectManager);
+
         $repository = $objectManager->getRepository('S3UTaxonomy\Entity\ZfTermTaxonomy');
         $queryBuilder = $repository->createQueryBuilder('tt');
         $queryBuilder->add('where','tt.taxonomy =\''.$name.'\'');
@@ -209,19 +219,50 @@
         //die(var_dump($zfTermTaxonomys));
         if($zfTermTaxonomys)
         {
-            foreach ($zfTermTaxonomys as $zfTermTaxonomy) {            
+
+            
+
+            
+            foreach ($termTaxonomys as $termTaxonomy) {
+                //$termTaxonomy = new ZfTermTaxonomyForm();
+
                 $entityManager=$this->getEntityManager();
                 $zfTermTaxonomy->setParent(NULL);
                 $entityManager->merge($zfTermTaxonomy);
                 $entityManager->flush();
+
             }
-            foreach ($zfTermTaxonomys as $zfTermTaxonomy) {
+
+            
+
+            
+            foreach ($termTaxonomys as $termTaxonomy) {
+
+                $termId=$termTaxonomy->getTermId();
+                $objectManager->remove($termTaxonomy);
+                $objectManager->flush();
+                $termId = $objectManager->getRepository('S3UTaxonomy\Entity\ZfTerm')->find($termId);                
+                // kiểm tra có ai xài chung term_id của thằng này nữa không nếu không thì xóa ở bảng term luôn
+                //1. kiểm tra xem có ai trong bảng termtaxonomy xài thằng này ko
+                $repository = $objectManager->getRepository('S3UTaxonomy\Entity\ZfTermTaxonomy');
+                $queryBuilder = $repository->createQueryBuilder('tt');
+                $queryBuilder->add('where','tt.term_id =\''.$termId->getTermId().'\'');
+                $query = $queryBuilder->getQuery(); 
+                $kiemTraTermTaxonomy = $query->execute();                
+                if(!$kiemTraTermTaxonomy)
+                {
+                    //2. lệnh xóa bỏ trong bảng term
+                    $deleteTerm = $objectManager->getRepository('S3UTaxonomy\Entity\ZfTerm')->find( $termId);                    
+                    $objectManager->remove($deleteTerm);
+                    $objectManager->flush(); 
+                    
+                }
+            }
+
                 
                 $objectManager->remove($zfTermTaxonomy);
                 $objectManager->flush();               
             }                
-        }
-        
         //Xóa Taxonomy trong ZfTerm        
         $objectManager->remove($zfTerms);
         $objectManager->flush();
