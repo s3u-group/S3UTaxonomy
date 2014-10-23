@@ -46,6 +46,18 @@ class ZfTermTaxonomy
 	*/
 	private $count;
 
+	private $cap;
+
+
+	public function setCap($cap)
+	{
+		$this->cap=$cap;
+	}
+
+	public function getCap()
+	{
+		return $this->cap;
+	}
 
 	public function getTermTaxonomyId()
 	{
@@ -100,6 +112,16 @@ class ZfTermTaxonomy
 	public function getCount()
 	{
 		return $this->count;
+	}
+
+	public function getNameParent()
+	{
+		if($this->getParent)
+		{
+		$parent=$this->parent;
+		if($parent)
+			return $parent->getTermId();
+		}
 	}
 }
 ?>
