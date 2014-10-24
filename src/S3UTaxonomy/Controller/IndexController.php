@@ -5,11 +5,14 @@
  use S3UTaxonomy\Entity\ZfTerm;
  use S3UTaxonomy\Entity\ZfTermTaxonomy;
  use Zend\ServiceManager\ServiceManager;
- use S3UTaxonomy\Form\ZfTermTaxonomyForm;
- use S3UTaxonomy\Form\ZfTermForm;
+ use S3UTaxonomy\Form\ZfTermTaxonomyFieldset;
+ use S3UTaxonomy\Form\ZfTermFieldset;
+ use S3UTaxonomy\Form\CreateTaxonomyForm;
+ use S3UTaxonomy\Form\CreateTermTaxonomyForm;
 
  use BaconStringUtils\Slugifier;
  use BaconStringUtils\UniDecoder;
+
  
 
  class IndexController extends AbstractActionController
@@ -42,7 +45,20 @@
 
  	public function addAction()
  	{
-         $objectManager=$this->getEntityManager();
+
+        $objectManager=$this->getEntityManager();
+        $zfTermTaxonomy=new ZfTermTaxonomy();
+
+        $form= new CreateTermTaxonomyForm($objectManager);
+        $form->bind($zfTermTaxonomy); 
+        
+        //$request = $this->getRequest();
+
+        return array(
+            'form' => $form, 
+            'checkTermTaxonomy'=>1,           
+         );
+        /* $objectManager=$this->getEntityManager();
 
          $zfTerm=new ZfTerm();
          $form= new ZfTermForm($objectManager);
@@ -77,13 +93,16 @@
                      $idTerm= $query->execute();
 
 
+
                      $zfTermTaxonomy=new ZfTermTaxonomy();
                      $formTermTaxonomy= new ZfTermTaxonomyForm($objectManager);
-                     $formTermTaxonomy->bind($zfTermTaxonomy);                     
-                     $zfTermTaxonomy->setTermId($idTerm[0]);
+                                         
+                     $zfTermTaxonomy->setTermId($idTerm[0]->getTermId());
+                     //die(var_dump($idTerm[0]->getTermId()));
                      $zfTermTaxonomy->setTaxonomy($slug);                     
                      $zfTermTaxonomy->setDescription('Taxonomy');
                      $zfTermTaxonomy->setCount(0);
+                     $formTermTaxonomy->bind($zfTermTaxonomy); 
                      $objectManager->persist($zfTermTaxonomy);
                      $objectManager->flush();
 
@@ -103,7 +122,7 @@
          return array(
             'form' => $form, 
             'checkTermTaxonomy'=>1,           
-         );
+         );*/
          
  	}
 

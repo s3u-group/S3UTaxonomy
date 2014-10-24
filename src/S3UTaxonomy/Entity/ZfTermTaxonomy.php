@@ -10,17 +10,17 @@ use Doctrine\Common\Persisttence\ObjectManager;
 class ZfTermTaxonomy
 {
 	/**
-	* @ORM\Column(type="bigint",length=20)
+	* @ORM\Column(name="term_taxonomy_id",type="bigint",length=20)
 	* @ORM\Id
 	* @ORM\GeneratedValue
 	*/
-	private $term_taxonomy_id;
+	private $termTaxonomyId;
 
 	/**
-	* @ORM\ManyToOne(targetEntity="S3UTaxonomy\Entity\ZfTerm")
+	* @ORM\ManyToOne(targetEntity="S3UTaxonomy\Entity\ZfTerm", cascade={"persist"})
 	* @ORM\JoinColumn(name="term_id", referencedColumnName="term_id")
 	*/
-	private $term_id;
+	private $termId;
 
 	/**
 	 * @ORM\Column(length=200)
@@ -61,17 +61,17 @@ class ZfTermTaxonomy
 
 	public function getTermTaxonomyId()
 	{
-		return $this->term_taxonomy_id;
+		return $this->termTaxonomyId;
 	}
 
-	public function setTermId($term_id)
+	public function setTermId($termId)
 	{
-		$this->term_id=$term_id;
+		$this->termId=$termId;
 	}
 
 	public function getTermId()
 	{
-		return $this->term_id;
+		return $this->termId;
 	}
 
 	public function setTaxonomy($taxonomy)

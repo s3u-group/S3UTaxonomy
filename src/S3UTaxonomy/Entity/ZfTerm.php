@@ -9,11 +9,11 @@ use Doctrine\ORM\Mapping as ORM;
 class ZfTerm
 {
 	/**
-	* @ORM\Column(type="bigint",length=20)
+	* @ORM\Column(name="term_id",type="bigint",length=20)
 	* @ORM\Id
 	* @ORM\GeneratedValue
 	*/
-	private $term_id;
+	private $termId;
 
 	/**
 	 * @ORM\Column(length=200)
@@ -26,13 +26,13 @@ class ZfTerm
 	private $slug;
 
 	/**
-	 * @ORM\Column(type="bigint",length=10)
+	 * @ORM\Column(name="term_group",type="bigint",length=10)
 	 */
-	private $term_group;
+	private $termGroup;
 
 	public function getTermId()
 	{
-		return $this->term_id;
+		return $this->termId;
 	}
 
 	public function setName($name)
@@ -55,14 +55,14 @@ class ZfTerm
 		return $this->slug;
 	}
 
-	public function setTermGroup($term_group)
+	public function setTermGroup($termGroup)
 	{
-		$this->term_group=$term_group;
+		$this->termGroup=$termGroup;
 	}
 
 	public function getTermGroup()
 	{
-		return $this->term_group;
+		return $this->termGroup;
 	}
 
 }

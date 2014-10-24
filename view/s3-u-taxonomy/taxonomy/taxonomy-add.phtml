@@ -1,6 +1,6 @@
 <?php
  
- $title = 'Thêm taxonomy con';
+ $title = 'thanh';
  $this->headTitle($title);
  ?>
  <h1><?php echo $this->escapeHtml($title); ?></h1>
@@ -13,27 +13,35 @@
  $form->prepare();
 
  echo $this->form()->openTag($form);
- echo $this->formHidden($form->get('term_taxonomy_id'));?>
+ $termTaxonomy=$form->get('term_taxonomy');
+ $term=$termTaxonomy->get('termId');
+ //$term=$termTaxonomy->get('termTaxonomyId');
+ echo $this->formHidden($termTaxonomy->get('termTaxonomyId'));?>
 
 <div class"form-group">
- <?php $tenTaxonomy=$form->get('taxonomy');?>
+ <?php $tenTaxonomy=$term->get('name');?>
  <?php $tenTaxonomy->setAttribute('class','form-control'); ?>
  <label><?php echo $tenTaxonomy->getLabel(); ?></label>
  <?php echo $this->formElement($tenTaxonomy); 
-if($checkTermTaxonomy==0)
- {
-	echo 'Taxonomy bạn vừa thêm đã tồn tại';
- }
 ?>
 </div>
+
 <div>
-	<?php $moTaTaxonomy=$form->get('description');?>
+	<?php $moTaTaxonomy=$termTaxonomy->get('description');?>
 	<?php $moTaTaxonomy->setAttribute('class','form-control'); ?>
  	<label><?php echo $moTaTaxonomy->getLabel();?></label>
  	<?php echo $this->formElement($moTaTaxonomy);?>
 </div>
+
+<div>
+	<?php $parentTaxonomy=$termTaxonomy->get('parent');?>
+	<?php $parentTaxonomy->setAttribute('class','form-control'); ?>
+ 	<label><?php echo $parentTaxonomy->getLabel();?></label>
+ 	<?php echo $this->formElement($parentTaxonomy);?>
+</div>
  
  <?php 
+ echo $this->formHidden($form->get('csrf'));
  $submit=$form->get('submit');
  $submit->setValue('Thêm');
  echo $this->formSubmit($submit);

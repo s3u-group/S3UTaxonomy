@@ -1,3 +1,4 @@
+<!--
 <?php
  
  $title = 'Thêm taxonomy';
@@ -12,7 +13,9 @@
  $form->prepare();
 
  echo $this->form()->openTag($form);
- echo $this->formHidden($form->get('term_id'));?>
+ $termTaxonomy=$form->get('term-taxonomy');
+ echo $this->formHidden($termTaxonomy->get('termTaxonomyId'));?>
+
 
 <div class"form-group">
  <?php $tenTaxonomy=$form->get('name');?>
@@ -25,7 +28,7 @@ if($checkTermTaxonomy==0)
  }
  ?>
 </div>
- 
+ -->
  <?php 
  $submit=$form->get('submit');
  $submit->setValue('Thêm');
