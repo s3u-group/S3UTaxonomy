@@ -13,7 +13,7 @@
  $form->prepare();
 
  echo $this->form()->openTag($form);
- $termTaxonomy=$form->get('term_taxonomy');
+ $termTaxonomy=$form->get('term-taxonomy');
  $term=$termTaxonomy->get('termId');
  //$term=$termTaxonomy->get('termTaxonomyId');
  echo $this->formHidden($termTaxonomy->get('termTaxonomyId'));?>

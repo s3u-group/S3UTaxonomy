@@ -1,7 +1,10 @@
 <?php
 namespace S3UTaxonomy\Entity;
 
-use Doctrine\ORM\Mapping as ORM;
+
+ use BaconStringUtils\Slugifier;
+ use BaconStringUtils\UniDecoder; 
+ use Doctrine\ORM\Mapping as ORM;
 /**
 * @ORM\Entity
 * @ORM\Table(name="zf_term")
@@ -45,9 +48,12 @@ class ZfTerm
 		return $this->name;
 	}
 
-	public function setSlug($slug)
+	public function setSlug()
 	{
-		$this->slug=$slug;
+		 $slugifier=new Slugifier;
+         $decoder=new UniDecoder;   
+         $this->slug=$slugifier->slugify($decoder->decode($this->name));
+		
 	}
 
 	public function getSlug()

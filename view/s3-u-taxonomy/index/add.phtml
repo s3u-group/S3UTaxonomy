@@ -1,39 +1,41 @@
-<!--
 <?php
  
- $title = 'Thêm taxonomy';
+ $title = 'thanh';
  $this->headTitle($title);
  ?>
  <h1><?php echo $this->escapeHtml($title); ?></h1>
  <div class="row">
  <div class="col-lg-6">
  <?php
+ //die(var_dump($taxs));
+ echo $this->form()->openTag($form);
  $form->setAttribute('action', $this->url('s3u_taxonomy/taxonomys', array('action' => 'add')));
  $form->setAttribute('role','form');
  $form->prepare();
+ 
+ $formTerm=$form->get('term-taxonomy');
+ $term=$formTerm->get('termId');
+ //die(var_dump($term));
+ 
 
- echo $this->form()->openTag($form);
- $termTaxonomy=$form->get('term-taxonomy');
- echo $this->formHidden($termTaxonomy->get('termTaxonomyId'));?>
+
+ echo $this->formHidden($formTerm->get('termTaxonomyId')); 
+ echo $this->formHidden($formTerm->get('taxonomy')); 
+ echo $this->formHidden($formTerm->get('description')); 
+ echo $this->formHidden($formTerm->get('parent')); 
+
+ echo $this->formHidden($formTerm->get('termId')); 
+ echo $this->formHidden($term->get('slug')); 
+
+ //echo $this->formHidden($term->get('name')); 
+ echo $this->formRow($term->get('name')); 
+ 
 
 
-<div class"form-group">
- <?php $tenTaxonomy=$form->get('name');?>
- <?php $tenTaxonomy->setAttribute('class','form-control'); ?>
- <label><?php echo $tenTaxonomy->getLabel(); ?></label>
- <?php echo $this->formElement($tenTaxonomy); 
-if($checkTermTaxonomy==0)
- {
-	echo 'Taxonomy bạn vừa thêm đã tồn tại';
- }
- ?>
-</div>
- -->
- <?php 
- $submit=$form->get('submit');
- $submit->setValue('Thêm');
- echo $this->formSubmit($submit);
+
+ echo $this->formSubmit($form->get('submit'));
  echo $this->form()->closeTag();?>
 
 </div>
 </div>
+ 

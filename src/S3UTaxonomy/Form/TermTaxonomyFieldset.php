@@ -13,7 +13,7 @@ class TermTaxonomyFieldset extends Fieldset implements InputFilterProviderInterf
 {
     public function __construct(ObjectManager $objectManager)
     {
-        parent::__construct('term_taxonomy');
+        parent::__construct('term-taxonomy');
 
         $this->setHydrator(new DoctrineHydrator($objectManager))
              ->setObject(new ZfTermTaxonomy());

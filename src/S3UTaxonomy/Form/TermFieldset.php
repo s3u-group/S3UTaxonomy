@@ -20,6 +20,10 @@ class TermFieldset extends Fieldset implements InputFilterProviderInterface
              'name' => 'termId',
              'type' => 'Hidden',
          ));
+         $this->add(array(
+             'name' => 'slug',
+             'type' => 'Hidden',
+         ));
                 
          $this->add(array(
              'name' => 'name',
