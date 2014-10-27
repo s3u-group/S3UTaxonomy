@@ -87,9 +87,16 @@ return array(
 
       'controller_plugins' => array(
         'invokables' => array(
-            'tree_plugin' => 'S3UTaxonomy\Controller\Plugin\TreePlugin',
-            'taxonomy_function' => 'S3UTaxonomy\Controller\Plugin\TaxonomyFunction',
-        )
+            'tree_plugin' => 'S3UTaxonomy\Controller\Plugin\TreePlugin',            
+        ),
+        'factories'=>array(
+            'taxonomy_function' => function($sm){
+                $entityManager=$sm->getServiceLocator()->get('Doctrine\ORM\EntityManager');
+                $taxonomyFunction=new S3UTaxonomy\Controller\Plugin\TaxonomyFunction();
+                $taxonomyFunction->setEntityManager($entityManager);
+                return $taxonomyFunction;
+            },
+        ),
     ),
 
 

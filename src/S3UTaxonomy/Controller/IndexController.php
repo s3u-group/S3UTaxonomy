@@ -9,7 +9,7 @@
  use S3UTaxonomy\Form\ZfTermFieldset;
  use S3UTaxonomy\Form\CreateTaxonomyForm;
  use S3UTaxonomy\Form\CreateTermTaxonomyForm;
- use S3UTaxonomy\Form\UpdateTermForm;
+ use S3UTaxonomy\Form\UpdateTermForm; 
 
  use BaconStringUtils\Slugifier;
  use BaconStringUtils\UniDecoder;
@@ -36,7 +36,9 @@
         $queryBuilder->add('where','tt.parent is NULL');
         $query = $queryBuilder->getQuery();
         $termTaxonomys = $query->execute();
- 		
+ 		$taxonomyFunction=$this->TaxonomyFunction();
+        $list=$taxonomyFunction->getListTaxonomy();
+        die(var_dump($list));
  		return array(
             'termTaxonomys'=>$termTaxonomys,
         );
