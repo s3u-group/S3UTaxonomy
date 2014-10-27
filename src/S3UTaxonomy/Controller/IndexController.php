@@ -37,6 +37,7 @@
         $query = $queryBuilder->getQuery();
         $termTaxonomys = $query->execute();
 
+        // kiểm thử các hàm trong Plugin/TaxonomyFunction
  		$taxonomyFunction=$this->TaxonomyFunction();
         // $list=$taxonomyFunction->getListTaxonomy();
         //die(var_dump($list));
@@ -47,8 +48,8 @@
         //$listChildTermTaxonomys=$taxonomyFunction->getListChildTaxonomy('dm1');
         //die(var_dump($listChildTermTaxonomys));
 
-        $listChildTermTaxonomyOrderById=$taxonomyFunction->getListChildTaxonomyOrderById('dm1');
-        die(var_dump($listChildTermTaxonomyOrderById));
+        // $listChildTermTaxonomyOrderById=$taxonomyFunction->getListChildTaxonomyOrderById('dm1');
+        // die(var_dump($listChildTermTaxonomyOrderById));
 
         
         
