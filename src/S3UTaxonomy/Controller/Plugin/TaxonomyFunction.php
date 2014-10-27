@@ -21,10 +21,10 @@ class TaxonomyFunction extends AbstractPlugin{
 	}
 
 
+    // hàm lấy cấp của taxonomy
     private $level=0;
     private $mangTam=array();
     public function outputTree($tree, $root = null) {          
-        die(var_dump($root));
         foreach($tree as $i=>$child) {           
             $parent = $child->getParent();
             if($parent == $root) {
@@ -41,7 +41,7 @@ class TaxonomyFunction extends AbstractPlugin{
  
     }
 
-
+    // lấy danh sách các taxonomy
 	public function getListTaxonomy(){
 		$entityManager=$this->getEntityManager();
         $repository = $entityManager->getRepository('S3UTaxonomy\Entity\ZfTermTaxonomy');
@@ -56,6 +56,8 @@ class TaxonomyFunction extends AbstractPlugin{
         return $list;
 	}
 
+
+    // lấy  id của một termtaxonomy
     public function getIdTermTaxonomy($taxonomy, $name, $slug)
     {
         $entityManager=$this->getEntityManager();
@@ -78,6 +80,7 @@ class TaxonomyFunction extends AbstractPlugin{
     }
 
 
+    // lấy toàn bộ dữ liệu trong một taxonomy
     public function getListChildTaxonomy($taxonomy)
     {
         $entityManager=$this->getEntityManager();
@@ -103,25 +106,20 @@ class TaxonomyFunction extends AbstractPlugin{
     }
 
 
-
-    public function getChildTaxonomy($taxonomy, int $id)
+    // lấy toàn bộ dữ liệu trong một taxonomy và sắp xếp theo id
+    public function getListChildTaxonomyOrderById($taxonomy)
     {
         $entityManager=$this->getEntityManager();
         $hydrator = new DoctrineHydrator($entityManager);
 
-        die(var_dump($id));
-        $root = $entityManager->getRepository('S3UTaxonomy\Entity\ZfTermTaxonomy')->find($id);
-
         $repository = $entityManager->getRepository('S3UTaxonomy\Entity\ZfTermTaxonomy');
         $queryBuilder = $repository->createQueryBuilder('tt');
-        $queryBuilder->add('where','tt.taxonomy=\''.$taxonomy.'\'');
+        $queryBuilder->add('where','tt.taxonomy=\''.$taxonomy.'\''.'order by tt.termTaxonomyId');
         $query = $queryBuilder->getQuery();
         $zfTermTaxonomys = $query->execute(); 
 
         $listChildTaxonomys = array();
-        die(var_dump($root));
-        $zfTermTaxonomys=$this->outputTree($zfTermTaxonomys, $root->getTermTaxonomyId());
-        die(var_dump($zfTermTaxonomys)); 
+        $zfTermTaxonomys=$this->outputTree($zfTermTaxonomys, $root = null); 
 
         foreach ($zfTermTaxonomys as $zfTermTaxonomy) {
             $cap=$zfTermTaxonomy->getCap();
@@ -130,8 +128,85 @@ class TaxonomyFunction extends AbstractPlugin{
             $dataArray['cap']=$cap;
             $listChildTaxonomys[]=$dataArray;
         }
-        die(var_dump($zfTermTaxonomys));
         return $listChildTaxonomys;
     }
+
+
+
+    // lấy phần tử và các con của nó theo id chuyền vào
+    public function getChildTaxonomy($taxonomy, $id=null)
+    {
+        
+        $entityManager=$this->getEntityManager();
+        $hydrator = new DoctrineHydrator($entityManager);
+        $listChildTaxonomys = array();
+
+        if($id)
+        {
+            $root = $entityManager->getRepository('S3UTaxonomy\Entity\ZfTermTaxonomy')->find($id);
+            $root=$root->getTermTaxonomyId();
+        }
+        else
+        {
+            $root=null;
+        }
+        
+
+        $repository = $entityManager->getRepository('S3UTaxonomy\Entity\ZfTermTaxonomy');
+        $queryBuilder = $repository->createQueryBuilder('tt');
+        $queryBuilder->add('where','tt.taxonomy=\''.$taxonomy.'\'');
+        $query = $queryBuilder->getQuery();
+        $zfTermTaxonomys = $query->execute(); 
+
+        
+        $zfTermTaxonomys=$this->outputTree($zfTermTaxonomys, $root); 
+
+        foreach ($zfTermTaxonomys as $zfTermTaxonomy) {
+            $cap=$zfTermTaxonomy->getCap();
+            $dataArray = $hydrator->extract($zfTermTaxonomy);
+            $dataArray['termId']=$hydrator->extract($dataArray['termId']);
+            $dataArray['cap']=$cap;
+            $listChildTaxonomys[]=$dataArray;
+        }
+        return $listChildTaxonomys;
+    }
+
+
+
+    // lấy theo điều kiện loại trừ
+    public function getListChildTaxonomyCondition($taxonomy, array $conditions)
+    {
+        $entityManager=$this->getEntityManager();
+        $hydrator = new DoctrineHydrator($entityManager);
+        //die(var_dump($condition));
+        $condit='';
+        if($conditions)
+        {
+            
+            foreach ($conditions as $condition) {
+                $condit.=' tt.termTaxonomyId!='.$condition.' and';
+                
+            }
+            //die(var_dump($condit));
+        }
+        $repository = $entityManager->getRepository('S3UTaxonomy\Entity\ZfTermTaxonomy');
+        $queryBuilder = $repository->createQueryBuilder('tt');
+        $queryBuilder->add('where', $condit.' tt.taxonomy=\''.$taxonomy.'\'');
+        $query = $queryBuilder->getQuery();
+        $zfTermTaxonomys = $query->execute(); 
+
+        $listChildTaxonomys = array();
+        $zfTermTaxonomys=$this->outputTree($zfTermTaxonomys, $root = null); 
+
+        foreach ($zfTermTaxonomys as $zfTermTaxonomy) {
+            $cap=$zfTermTaxonomy->getCap();
+            $dataArray = $hydrator->extract($zfTermTaxonomy);
+            $dataArray['termId']=$hydrator->extract($dataArray['termId']);
+            $dataArray['cap']=$cap;
+            $listChildTaxonomys[]=$dataArray;
+        }
+        return $listChildTaxonomys;
+    }
+
 }
 ?>

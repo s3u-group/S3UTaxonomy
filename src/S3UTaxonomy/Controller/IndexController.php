@@ -38,16 +38,25 @@
         $termTaxonomys = $query->execute();
 
  		$taxonomyFunction=$this->TaxonomyFunction();
-        $list=$taxonomyFunction->getListTaxonomy();
+        // $list=$taxonomyFunction->getListTaxonomy();
         //die(var_dump($list));
 
-        $idTermTaxonomy=$taxonomyFunction->getIdTermTaxonomy('dm1', 'a a', 'a-a');
+        //$idTermTaxonomy=$taxonomyFunction->getIdTermTaxonomy('dm1', 'a a', 'a-a');
         //die(var_dump($idTermTaxonomy));
 
-        $listChildTermTaxonomys=$taxonomyFunction->getListChildTaxonomy('dm1');
+        //$listChildTermTaxonomys=$taxonomyFunction->getListChildTaxonomy('dm1');
         //die(var_dump($listChildTermTaxonomys));
-        $childTermTaxonomys=$taxonomyFunction->getChildTaxonomy('dm1','16');
-        die(var_dump($childTermTaxonomys));
+
+        $listChildTermTaxonomyOrderById=$taxonomyFunction->getListChildTaxonomyOrderById('dm1');
+        die(var_dump($listChildTermTaxonomyOrderById));
+
+        
+        
+        // $childTermTaxonomys=$taxonomyFunction->getChildTaxonomy('dm1',16);
+        // die(var_dump($childTermTaxonomys));
+
+        // $listChildTermTaxonomyCondition=$taxonomyFunction->getListChildTaxonomyCondition('dm1',array(16,15,18));
+        // die(var_dump($listChildTermTaxonomyCondition));
 
  		return array(
             'termTaxonomys'=>$termTaxonomys,
