@@ -162,12 +162,6 @@
                   $zfTermTaxonomy->getTermId()->setTermGroup(0);
                  }
 
-
-
-
-
-
-
                }
                if(!$terms)// chưa có thì thêm mới
                {
@@ -236,19 +230,8 @@
     {
       $form->setData($request->getPost());
       if ($form->isValid()) {
-        $term=$entityManager->getRepository('S3UTaxonomy\Entity\ZfTerm'); 
-        $queryBuilder = $term->createQueryBuilder('t');             
-        $queryBuilder->add('where','t.name=\''.$termTaxonomy->getTermId()->getName().'\'');       
-        $query = $queryBuilder->getQuery();        
-        $terms = $query->execute(); 
-        if($terms)
-        {
-         $termTaxonomy->setTermId($terms[0]);
-        }
-        $slugifier=new Slugifier;
-        $decoder=new UniDecoder;        
-        $slug=$slugifier->slugify($decoder->decode($termTaxonomy->getTermId()->getName()));        
-        // nếu không chọn cha thì mặc định nó là cấp lớn nhất trong taxonomy đó
+
+         // nếu không chọn cha thì mặc định nó là cấp lớn nhất trong taxonomy đó
         if(!$termTaxonomy->getParent())
         {
           $repository = $entityManager->getRepository('S3UTaxonomy\Entity\ZfTermTaxonomy');
@@ -258,7 +241,53 @@
           $parentTermTaxonomy = $query->execute();  
           $termTaxonomy->setParent($parentTermTaxonomy[0]->getTermTaxonomyId());
         }
-        $termTaxonomy->getTermId()->setSlug($termTaxonomy->getTermId()->getName());
+
+        $slugifier=new Slugifier;
+        $decoder=new UniDecoder;   
+        $slug=$slugifier->slugify($decoder->decode($termTaxonomy->getTermId()->getName()));
+        $termTaxonomy->getTermId()->setSlug($slug);
+
+        $term=$entityManager->getRepository('S3UTaxonomy\Entity\ZfTerm'); 
+        $queryBuilder = $term->createQueryBuilder('t');             
+        $queryBuilder->add('where','t.name=\''.$termTaxonomy->getTermId()->getName().'\'');       
+        $query = $queryBuilder->getQuery();        
+        $terms = $query->execute(); 
+        if($terms)
+        {
+         //$termTaxonomy->setTermId($terms[0]);
+         $termTaxonomy->getTermId()->setName($termTaxonomy->getTermId()->getName());
+
+         // kiểm tra trong bảng termtaxonomy có termtaxonomy nào 
+         $repository = $entityManager->getRepository('S3UTaxonomy\Entity\ZfTermTaxonomy');
+         $queryBuilder = $repository->createQueryBuilder('t');
+         $queryBuilder->add('where','t.termId='.$terms[0]->getTermId().' and t.taxonomy=\''.$tax.'\'');
+         $query = $queryBuilder->getQuery();
+         $tonTaiTermTaxonomyBangTen = $query->execute();
+
+
+
+        /* var_dump($termTaxonomy->getParent());
+         die(var_dump($tonTaiTermTaxonomyBangTen));*/
+         foreach ($tonTaiTermTaxonomyBangTen as $i) {
+           if($i->getParent()==$termTaxonomy->getParent())
+           {
+            return array(
+              'form' => $form, 
+              'taxs'=> $tax,
+              'termTaxonomys'=>$termTaxonomys,
+              'coKiemTraTonTai'=>1,
+            );
+           }
+         }
+         if($tonTaiTermTaxonomyBangTen)
+         {
+          $parentTermTaxonomy = $entityManager->getRepository('S3UTaxonomy\Entity\ZfTermTaxonomy')->find($termTaxonomy->getParent());
+          $slug.='-'.$slugifier->slugify($decoder->decode($parentTermTaxonomy->getTermId()->getSlug()));
+          $termTaxonomy->getTermId()->setSlug($slug);
+         }
+
+         
+        } 
         $entityManager->flush();
 
         return $this->redirect()->toRoute('taxonomy/childTaxonomy',array('tax'=>$tax));        
@@ -269,6 +298,7 @@
       'form' => $form, 
       'taxs'=> $tax,
       'termTaxonomys'=>$termTaxonomys,
+      'coKiemTraTonTai'=>0,
     );
  	}
 

@@ -24,7 +24,11 @@
  <?php $tenTaxonomy=$term->get('name');?>
  <?php $tenTaxonomy->setAttribute('class','form-control'); ?>
  <label><?php echo $tenTaxonomy->getLabel(); ?></label>
- <?php echo $this->formElement($tenTaxonomy); 
+ <?php echo $this->formElement($tenTaxonomy);
+ 	if($coKiemTraTonTai==1)
+ 	{
+ 		echo 'Term Taxonomy này đã tồn tại!';
+ 	} 
 ?>
 </div>
 
