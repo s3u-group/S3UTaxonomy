@@ -6,8 +6,5 @@ use Zend\ServiceManager\ServiceManager;
 class TaxonomyFunction extends AbstractPlugin{	
 	
 	public function getListTaxonomy(){
-
-		
 	}
-}
 ?>
