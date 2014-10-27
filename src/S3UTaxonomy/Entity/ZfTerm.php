@@ -33,6 +33,10 @@ class ZfTerm
 	 */
 	private $termGroup;
 
+	public function setTermId($termId)
+	{
+		$this->termId=$termId;
+	}
 	public function getTermId()
 	{
 		return $this->termId;
@@ -48,11 +52,19 @@ class ZfTerm
 		return $this->name;
 	}
 
-	public function setSlug()
+	public function setSlug($slug=null)
 	{
-		 $slugifier=new Slugifier;
-         $decoder=new UniDecoder;   
-         $this->slug=$slugifier->slugify($decoder->decode($this->name));
+		if($slug==null)
+		{
+			 $slugifier=new Slugifier;
+	         $decoder=new UniDecoder;   
+	         $this->slug=$slugifier->slugify($decoder->decode($this->name));
+		}
+		else
+		{
+			$this->slug=$slug;
+		}
+		 
 		
 	}
 
@@ -70,6 +82,7 @@ class ZfTerm
 	{
 		return $this->termGroup;
 	}
+
 
 }
 ?>

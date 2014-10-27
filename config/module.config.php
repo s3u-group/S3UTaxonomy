@@ -77,9 +77,18 @@ return array(
 		)
 	),
 
+    'view_helpers'=>array(
+        'invokables'=>array(
+            'makeArrayCollection'=>'S3UTaxonomy\View\Helper\MakeArrayCollection',  
+
+        ),
+    ),
+
+
       'controller_plugins' => array(
         'invokables' => array(
             'tree_plugin' => 'S3UTaxonomy\Controller\Plugin\TreePlugin',
+            'taxonomy_function' => 'S3UTaxonomy\Controller\Plugin\TaxonomyFunction',
         )
     ),
 

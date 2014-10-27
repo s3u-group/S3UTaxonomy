@@ -1,9 +1,13 @@
 <?php
  
- $title = 'thanh';
+ $title = 'Thêm mới Taxonomy';
+
  $this->headTitle($title);
  ?>
  <h1><?php echo $this->escapeHtml($title); ?></h1>
+ <a href="<?php echo $this->url('s3u_taxonomy');?>">Quay lại</a>
+ 	
+ </a>
  <div class="row">
  <div class="col-lg-6">
  <?php
@@ -29,11 +33,12 @@
 
  //echo $this->formHidden($term->get('name')); 
  echo $this->formRow($term->get('name')); 
- 
-
-
 
  echo $this->formSubmit($form->get('submit'));
+ if($coKiemTraTonTai=='1')
+ {
+ 	echo '<br>Tên taxonomy đã tồn tại!';
+ }
  echo $this->form()->closeTag();?>
 
 </div>

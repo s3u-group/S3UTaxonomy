@@ -40,7 +40,6 @@ class ZfTermTaxonomy
 	private $parent;
 
 
-
 	/**
 	* @ORM\Column(type="bigint",length=20)
 	*/
@@ -59,6 +58,11 @@ class ZfTermTaxonomy
 		return $this->cap;
 	}
 
+
+	public function setTermTaxonomyId($termTaxonomyId)
+	{
+		$this->termTaxonomyId=$termTaxonomyId;
+	}
 	public function getTermTaxonomyId()
 	{
 		return $this->termTaxonomyId;

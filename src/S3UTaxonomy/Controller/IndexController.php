@@ -61,25 +61,38 @@
             //var_dump($zfTermTaxonomy);
                         
             if ($form->isValid()) {
-    
-                $zfTermTaxonomy->setTaxonomy($zfTermTaxonomy->getTermId()->getSlug());
-                $zfTermTaxonomy->setDescription('Taxonomy');
-                $zfTermTaxonomy->setParent(NULL);
-                $zfTermTaxonomy->getTermId()->setTermGroup(0);
-                //die(var_dump($zfTermTaxonomy));                
-                $objectManager->persist($zfTermTaxonomy);
-                $objectManager->flush();
-                return $this->redirect()->toRoute('taxonomy');
+
+                 $term=$objectManager->getRepository('S3UTaxonomy\Entity\ZfTerm'); 
+                 $queryBuilder = $term->createQueryBuilder('t');             
+                 $queryBuilder->add('where','t.name=\''.$zfTermTaxonomy->getTermId()->getName().'\'');       
+                 $query = $queryBuilder->getQuery();        
+                 $terms = $query->execute(); 
+                 if(!$terms)
+                 {
+                    $zfTermTaxonomy->setTaxonomy($zfTermTaxonomy->getTermId()->getSlug());
+                    $zfTermTaxonomy->setDescription('Taxonomy');
+                    $zfTermTaxonomy->setParent(NULL);
+                    $zfTermTaxonomy->getTermId()->setTermGroup(0);
+                    //die(var_dump($zfTermTaxonomy));                
+                    $objectManager->persist($zfTermTaxonomy);
+                    $objectManager->flush();
+                    return $this->redirect()->toRoute('s3u_taxonomy');
+                 } 
+                 else
+                 {
+                    return array(
+                      'form' => $form,
+                      'coKiemTraTonTai'=>1,
+                    );
+                 }           
 
             }
-            else
-            {
-                die(var_dump($form->getMessages()));
-            }
+            
         }
         
         return array(
-          'form' => $form,           
+          'form' => $form,  
+          'coKiemTraTonTai'=>0,         
         );
         
  	}
