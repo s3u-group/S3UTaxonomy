@@ -36,9 +36,19 @@
         $queryBuilder->add('where','tt.parent is NULL');
         $query = $queryBuilder->getQuery();
         $termTaxonomys = $query->execute();
+
  		$taxonomyFunction=$this->TaxonomyFunction();
         $list=$taxonomyFunction->getListTaxonomy();
-        die(var_dump($list));
+        //die(var_dump($list));
+
+        $idTermTaxonomy=$taxonomyFunction->getIdTermTaxonomy('dm1', 'a a', 'a-a');
+        //die(var_dump($idTermTaxonomy));
+
+        $listChildTermTaxonomys=$taxonomyFunction->getListChildTaxonomy('dm1');
+        //die(var_dump($listChildTermTaxonomys));
+        $childTermTaxonomys=$taxonomyFunction->getChildTaxonomy('dm1','16');
+        die(var_dump($childTermTaxonomys));
+
  		return array(
             'termTaxonomys'=>$termTaxonomys,
         );
