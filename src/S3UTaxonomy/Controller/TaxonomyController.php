@@ -265,10 +265,6 @@
          $query = $queryBuilder->getQuery();
          $tonTaiTermTaxonomyBangTen = $query->execute();
 
-
-
-        /* var_dump($termTaxonomy->getParent());
-         die(var_dump($tonTaiTermTaxonomyBangTen));*/
          foreach ($tonTaiTermTaxonomyBangTen as $i) {
            if($i->getParent()==$termTaxonomy->getParent())
            {
