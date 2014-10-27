@@ -50,7 +50,8 @@
     if($termTaxonomys==null)
     {
       return $this->redirect()->toRoute('s3u_taxonomy');
-    }   
+    }    
+
     $plugin=$this->TreePlugin();
 
     $termTaxonomys=$plugin->xuatMenu($termTaxonomys, $root = null);  

@@ -14,9 +14,6 @@
  use BaconStringUtils\Slugifier;
  use BaconStringUtils\UniDecoder;
  
-
- 
-
  class IndexController extends AbstractActionController
  {
  	 private $entityManager;
