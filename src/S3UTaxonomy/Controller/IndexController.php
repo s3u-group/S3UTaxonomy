@@ -49,10 +49,10 @@
         // $list=$taxonomyFunction->getListTaxonomy();
         //die(var_dump($list));
 
-        $idTermTaxonomy=$taxonomyFunction->getIdTermTaxonomy('dm1', 'a a', 'a-a');
-        die(var_dump($idTermTaxonomy));
+        //$idTermTaxonomy=$taxonomyFunction->getIdTermTaxonomy('dm1', 'a a', 'a-a');
+        //die(var_dump($idTermTaxonomy));
 
-        //$listChildTermTaxonomys=$taxonomyFunction->getListChildTaxonomy('dm1');
+        //$listChildTermTaxonomys=$taxonomyFunction->getListChildTaxonomy('Danh Mục');// đưa vào taxonomy dạng slug
         //die(var_dump($listChildTermTaxonomys));
 
         // $listChildTermTaxonomyOrderById=$taxonomyFunction->getListChildTaxonomyOrderById('dm1');

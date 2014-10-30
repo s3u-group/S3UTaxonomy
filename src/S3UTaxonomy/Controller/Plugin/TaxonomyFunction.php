@@ -41,7 +41,7 @@ class TaxonomyFunction extends AbstractPlugin{
  
     }
 
-    // lấy danh sách các taxonomy
+    // lấy danh sách các taxonomy    
 	public function getListTaxonomy(){
 		$entityManager=$this->getEntityManager();
         $repository = $entityManager->getRepository('S3UTaxonomy\Entity\ZfTermTaxonomy');
@@ -58,7 +58,7 @@ class TaxonomyFunction extends AbstractPlugin{
 
 
     // lấy  id của một termtaxonomy
-    public function getIdTermTaxonomy($taxonomy, $name, $slug)
+    public function getIdTermTaxonomy($taxonomy, $name, $slug)// đưa taxonomy dưới dạng slug
     {
         $id=NULL;
         $entityManager=$this->getEntityManager();
@@ -89,6 +89,7 @@ class TaxonomyFunction extends AbstractPlugin{
 
 
     // lấy toàn bộ dữ liệu trong một taxonomy
+    // đưa taxonomy dưới dạng slug
     public function getListChildTaxonomy($taxonomy)
     {
         $listChildTaxonomys = array();
@@ -124,6 +125,7 @@ class TaxonomyFunction extends AbstractPlugin{
 
 
     // lấy toàn bộ dữ liệu trong một taxonomy và sắp xếp theo id
+    // tham số taxonomy là tham số dạng slug
     public function getListChildTaxonomyOrderById($taxonomy)
     {
         $listChildTaxonomys = array();
@@ -159,6 +161,7 @@ class TaxonomyFunction extends AbstractPlugin{
 
 
     // lấy phần tử và các con của nó theo id chuyền vào
+    // tham số taxonomy là tham số dưới dạng slug và id là dạng số
     public function getChildTaxonomy($taxonomy, $id=null)
     {
         
@@ -207,6 +210,9 @@ class TaxonomyFunction extends AbstractPlugin{
 
 
     // lấy theo điều kiện loại trừ
+    // tham số taxonomy là tham số dạng slug, array codition là mảng các id của taxonomy. 
+    //ví dụ muốn bỏ ra termtaxonomy có id= 4 và 12 thì sẽ $condition sẽ là:
+    //$condition=array(4,12);
     public function getListChildTaxonomyCondition($taxonomy, array $conditions)
     {
         $listChildTaxonomys = array();
