@@ -1,0 +1,23 @@
+<?php use Zend\Form\Element; ?>
+<?php $form->prepare(); // The correct enctype is set here ?>
+<?php echo $this->form()->openTag($form); ?>
+	
+
+    <div class="form-element">
+        <?php $fileElement = $form->get('image-file'); ?>
+        <?php 
+        	foreach($imgs as $img)
+        	{
+        		echo '<img src="../img/'.$img.'"/>';
+        	}  
+        	//$element->setAttribute('src','../img/hot.jpg');     	
+			//echo $this->formImage($form->get('element'));
+        ?>
+        <?php echo $this->formLabel($fileElement); ?>
+        <?php echo $this->formFile($fileElement); ?>
+        <?php echo $this->formElementErrors($fileElement); ?>
+    </div>
+
+    <button>Submit</button>
+
+<?php echo $this->form()->closeTag(); ?>

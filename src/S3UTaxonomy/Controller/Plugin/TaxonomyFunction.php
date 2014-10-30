@@ -60,6 +60,7 @@ class TaxonomyFunction extends AbstractPlugin{
     // lấy  id của một termtaxonomy
     public function getIdTermTaxonomy($taxonomy, $name, $slug)
     {
+        $id=NULL;
         $entityManager=$this->getEntityManager();
 
         $repository = $entityManager->getRepository('S3UTaxonomy\Entity\ZfTerm');
@@ -68,13 +69,20 @@ class TaxonomyFunction extends AbstractPlugin{
         $query = $queryBuilder->getQuery();
         $zfTerm = $query->execute();
         //die(var_dump($zfTerm));
-
+        if(!$zfTerm)
+        {
+            return $id;
+        }
 
         $repository = $entityManager->getRepository('S3UTaxonomy\Entity\ZfTermTaxonomy');
         $queryBuilder = $repository->createQueryBuilder('tt');
         $queryBuilder->add('where','tt.termId='.(int)$zfTerm[0]->getTermId().' and tt.taxonomy=\''.$taxonomy.'\'');
         $query = $queryBuilder->getQuery();
         $zfTermTaxonomy = $query->execute();
+        if(!$zfTermTaxonomy)
+        {
+            return $id;
+        }
         $id=(int)$zfTermTaxonomy[0]->getTermTaxonomyId();
         return $id;
     }
@@ -83,6 +91,7 @@ class TaxonomyFunction extends AbstractPlugin{
     // lấy toàn bộ dữ liệu trong một taxonomy
     public function getListChildTaxonomy($taxonomy)
     {
+        $listChildTaxonomys = array();
         $entityManager=$this->getEntityManager();
         $hydrator = new DoctrineHydrator($entityManager);
 
@@ -91,9 +100,17 @@ class TaxonomyFunction extends AbstractPlugin{
         $queryBuilder->add('where','tt.taxonomy=\''.$taxonomy.'\'');
         $query = $queryBuilder->getQuery();
         $zfTermTaxonomys = $query->execute(); 
+        if(!$zfTermTaxonomys)
+        {
+            return $listChildTaxonomys;
+        }
 
-        $listChildTaxonomys = array();
+        
         $zfTermTaxonomys=$this->outputTree($zfTermTaxonomys, $root = null); 
+        if(!$zfTermTaxonomys)
+        {
+            return $listChildTaxonomys;
+        }
 
         foreach ($zfTermTaxonomys as $zfTermTaxonomy) {
             $cap=$zfTermTaxonomy->getCap();
@@ -109,6 +126,7 @@ class TaxonomyFunction extends AbstractPlugin{
     // lấy toàn bộ dữ liệu trong một taxonomy và sắp xếp theo id
     public function getListChildTaxonomyOrderById($taxonomy)
     {
+        $listChildTaxonomys = array();
         $entityManager=$this->getEntityManager();
         $hydrator = new DoctrineHydrator($entityManager);
 
@@ -117,9 +135,16 @@ class TaxonomyFunction extends AbstractPlugin{
         $queryBuilder->add('where','tt.taxonomy=\''.$taxonomy.'\''.'order by tt.termTaxonomyId');
         $query = $queryBuilder->getQuery();
         $zfTermTaxonomys = $query->execute(); 
-
-        $listChildTaxonomys = array();
+        if(!$zfTermTaxonomys)
+        {
+            return $listChildTaxonomys;
+        }
+        
         $zfTermTaxonomys=$this->outputTree($zfTermTaxonomys, $root = null); 
+        if(!$zfTermTaxonomys)
+        {
+            return $listChildTaxonomys;
+        }
 
         foreach ($zfTermTaxonomys as $zfTermTaxonomy) {
             $cap=$zfTermTaxonomy->getCap();
@@ -157,9 +182,17 @@ class TaxonomyFunction extends AbstractPlugin{
         $queryBuilder->add('where','tt.taxonomy=\''.$taxonomy.'\'');
         $query = $queryBuilder->getQuery();
         $zfTermTaxonomys = $query->execute(); 
+        if(!$zfTermTaxonomys)
+        {
+            return $listChildTaxonomys;
+        }
 
         
         $zfTermTaxonomys=$this->outputTree($zfTermTaxonomys, $root); 
+        if(!$zfTermTaxonomys)
+        {
+            return $listChildTaxonomys;
+        }
 
         foreach ($zfTermTaxonomys as $zfTermTaxonomy) {
             $cap=$zfTermTaxonomy->getCap();
@@ -176,6 +209,7 @@ class TaxonomyFunction extends AbstractPlugin{
     // lấy theo điều kiện loại trừ
     public function getListChildTaxonomyCondition($taxonomy, array $conditions)
     {
+        $listChildTaxonomys = array();
         $entityManager=$this->getEntityManager();
         $hydrator = new DoctrineHydrator($entityManager);
         //die(var_dump($condition));
@@ -194,9 +228,17 @@ class TaxonomyFunction extends AbstractPlugin{
         $queryBuilder->add('where', $condit.' tt.taxonomy=\''.$taxonomy.'\'');
         $query = $queryBuilder->getQuery();
         $zfTermTaxonomys = $query->execute(); 
+        if(!$zfTermTaxonomys)
+        {
+            return $listChildTaxonomys;
+        }
 
-        $listChildTaxonomys = array();
+       
         $zfTermTaxonomys=$this->outputTree($zfTermTaxonomys, $root = null); 
+        if(!$zfTermTaxonomys)
+        {
+            return $listChildTaxonomys;
+        }
 
         foreach ($zfTermTaxonomys as $zfTermTaxonomy) {
             $cap=$zfTermTaxonomy->getCap();

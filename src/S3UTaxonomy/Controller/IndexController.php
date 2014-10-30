@@ -10,6 +10,13 @@
  use S3UTaxonomy\Form\CreateTaxonomyForm;
  use S3UTaxonomy\Form\CreateTermTaxonomyForm;
  use S3UTaxonomy\Form\UpdateTermForm; 
+ use S3UTaxonomy\Form\UploadForm;
+ use Zend\File\Transfer\Adapter\Http;
+ use Zend\Http\PhpEnvironment\Request;
+
+ use DateTime;
+
+
 
  use BaconStringUtils\Slugifier;
  use BaconStringUtils\UniDecoder;
@@ -42,8 +49,8 @@
         // $list=$taxonomyFunction->getListTaxonomy();
         //die(var_dump($list));
 
-        //$idTermTaxonomy=$taxonomyFunction->getIdTermTaxonomy('dm1', 'a a', 'a-a');
-        //die(var_dump($idTermTaxonomy));
+        $idTermTaxonomy=$taxonomyFunction->getIdTermTaxonomy('dm1', 'a a', 'a-a');
+        die(var_dump($idTermTaxonomy));
 
         //$listChildTermTaxonomys=$taxonomyFunction->getListChildTaxonomy('dm1');
         //die(var_dump($listChildTermTaxonomys));
@@ -246,5 +253,77 @@
         }                       
         return $this->redirect()->toRoute('s3u_taxonomy');        
  	}
+
+    public function uploadFormAction()
+    {
+        $form = new UploadForm('upload-form');
+        $arrayImage=array();// cái này hiển thị chơi thôi hỏng liên quan gì hết đó
+
+        $request = $this->getRequest();
+        if ($request->isPost()) {
+            // Make certain to merge the files info!
+            $post = array_merge_recursive(
+                $request->getPost()->toArray(),
+                $request->getFiles()->toArray()
+            );
+            $form->setData($post); 
+            if ($form->isValid()) {
+                // Form is valid, save the form!
+                // lấy dữ liệu hình ảnh
+                $data = $form->getData();                
+                // rename multi file. phải có trường ->setAttribute('multiple', true); trong addElement trong uploadForm.php
+                foreach ($data['image-file'] as $dt) {
+                   $uniqueToken=md5(uniqid(mt_rand(),true));
+                   $newName=$uniqueToken.'_'.$dt['name'];
+                   $arrayImage[]=$newName;
+                   $filter = new \Zend\Filter\File\Rename("./public/img/".$newName);
+                   $filter->filter($dt);
+                }
+
+
+                //rename 1 file và phải bỏ inputfilter và bỏ luôn ->setAttribute('multiple', true); trong uploadform.php
+                // $uniqueToken=md5(uniqid(mt_rand(),true));
+                // $newName=$uniqueToken.'_'.$data['image-file']['name'];
+                // $filter = new \Zend\Filter\File\Rename("./public/img/".$newName);
+                // $filter->filter($data['image-file']);
+
+                //quay lạy form nào đây hihi
+                //return $this->redirect()->toRoute('s3u_taxonomy');                
+            }
+            else
+            {
+                $fileErrors = $form->get('image-file')->getMessages();
+                if (empty($fileErrors)) {
+                    $tempFile = $form->get('image-file')->getValue();
+                }
+            }
+
+
+            /*$tempFile = null;
+            $prg = $this->fileprg($form);
+            if ($prg instanceof \Zend\Http\PhpEnvironment\Response) {
+                return $prg; // Return PRG redirect response
+            } 
+            elseif (is_array($prg)) 
+            {
+                if($form->isValid())
+                {
+                    return $this->redirect()->toRoute('s3u_taxonomy');     
+                }  
+                else
+                {
+                    $fileErrors = $form->get('image-file')->getMessages();
+                    if (empty($fileErrors)) {
+                        $tempFile = $form->get('image-file')->getValue();
+                    }
+                } 
+            }*/
+        }
+        
+        return array(
+            'form' => $form,
+            'imgs'=>$arrayImage,
+        );
+    }
  }
 ?>
