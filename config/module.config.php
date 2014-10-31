@@ -97,6 +97,9 @@ return array(
                 return $taxonomyFunction;
             },
         ),
+        'shared'=>array(
+            'taxonomy_function'=>false,
+        ),
     ),
 
 
