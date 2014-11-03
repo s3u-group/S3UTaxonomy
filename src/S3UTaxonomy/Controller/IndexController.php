@@ -55,8 +55,8 @@
         //$listChildTermTaxonomysDanhMuc=$taxonomyFunction->getListChildTaxonomy('danh-muc');// đưa vào taxonomy dạng slug
         //var_dump($listChildTermTaxonomysDanhMuc);
 
-         $listChildTermTaxonomys=$taxonomyFunction->getListChildTaxonomy('khu-vuc');// đưa vào taxonomy dạng slug
-        die(var_dump($listChildTermTaxonomys));
+         //$listChildTermTaxonomys=$taxonomyFunction->getListChildTaxonomy('khu-vuc');// đưa vào taxonomy dạng slug
+        //die(var_dump($listChildTermTaxonomys));
 
         // $listChildTermTaxonomyOrderById=$taxonomyFunction->getListChildTaxonomyOrderById('dm1');
         // die(var_dump($listChildTermTaxonomyOrderById));

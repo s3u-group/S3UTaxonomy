@@ -266,7 +266,7 @@
          $tonTaiTermTaxonomyBangTen = $query->execute();
 
          foreach ($tonTaiTermTaxonomyBangTen as $i) {
-           if($i->getParent()==$termTaxonomy->getParent())
+           if($i->getParent()==$termTaxonomy->getParent()&&$i->getTermTaxonomyId()!=$id)
            {
             return array(
               'form' => $form, 
